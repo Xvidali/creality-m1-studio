@@ -187,65 +187,58 @@
       border: 1px solid var(--border);
     }
 
+    .header-card {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
     .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
 
     .header-top h1 {
       margin: 0;
-      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      font-size: clamp(1.05rem, 3.5vw, 1.25rem);
       font-weight: 900;
       color: var(--accent-green);
       letter-spacing: -0.02em;
-      min-width: 0;
-      flex: 1 1 280px;
+      line-height: 1.25;
     }
 
     .header-sub {
       color: var(--text-secondary);
-      font-size: 0.78rem;
-      margin-top: 4px;
-      line-height: 1.4;
+      font-size: 0.74rem;
+      margin: 0;
+      line-height: 1.35;
       width: 100%;
     }
 
     .actions-row {
-      display: flex;
-      gap: 8px;
+      display: inline-flex;
+      gap: 6px;
       align-items: center;
       flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    @media (max-width: 768px) {
-      .header-top {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .actions-row {
-        width: 100%;
-        justify-content: flex-start;
-      }
     }
 
     .btn-pill {
       background: var(--bg-surface-elevated);
       border: 1px solid var(--border);
       color: var(--text-primary);
-      padding: 7px 12px;
+      padding: 6px 11px;
       border-radius: 20px;
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       white-space: nowrap;
       flex-shrink: 0;
       line-height: 1.2;
@@ -554,11 +547,11 @@
 <body>
 
   <div class="app-shell">
-    <div class="card">
+    <div class="card header-card">
       <div class="header-top">
         <h1 data-i18n="appTitle">⚙️ Creality M1 & R1 Master Studio Pro</h1>
         <div class="actions-row">
-          <select id="langSelect" onchange="changeLanguage(this.value)" class="btn-pill" style="padding: 5px 10px; cursor: pointer;">
+          <select id="langSelect" onchange="changeLanguage(this.value)" class="btn-pill" style="padding: 5px 8px; cursor: pointer;">
             <option value="es">🇪🇸 Español</option>
             <option value="en">🇬🇧 English</option>
             <option value="ca">🇦🇩 Català</option>
