@@ -554,7 +554,7 @@
           <select id="langSelect" onchange="changeLanguage(this.value)" class="btn-pill" style="padding: 5px 8px; cursor: pointer;">
             <option value="es">🇪🇸 Español</option>
             <option value="en">🇬🇧 English</option>
-            <option value="ca">🇦🇩 Català</option>
+            <option value="ca">Català</option>
             <option value="fr">🇫🇷 Français</option>
             <option value="de">🇩🇪 Deutsch</option>
           </select>
@@ -721,6 +721,53 @@
             <label data-i18n="lblMfi">Aumento de Fluidez (MFI):</label>
             <div class="val-highlight val-amber" style="font-size:1.1rem;" id="mfiDisp">+14% fluidez</div>
             <small style="color:var(--text-muted);" data-i18n="lblMfiSub">Por degradación térmica R1</small>
+          </div>
+        </div>
+
+        <!-- PANEL RÁPIDO PARA BAMBU STUDIO & ORCASLICER -->
+        <div class="panel-block accent-green" style="margin-top:18px; background: rgba(0, 210, 106, 0.05); border: 1.5px solid var(--accent-green);">
+          <div class="panel-title" style="color: var(--accent-green); margin-bottom: 8px;">
+            <span data-i18n="bambuQuickTitle">⚡ Ajustes Rápidos para Bambu Studio / OrcaSlicer</span>
+            <small style="font-size:0.75rem; color:var(--text-secondary); font-weight:normal;" data-i18n="bambuQuickSub">Pega estos 3 valores en la pestaña 'Filamento' de tu laminador</small>
+          </div>
+
+          <div class="grid-3" style="margin-top:8px;">
+            <!-- 1. FLOW RATIO DIRECTO -->
+            <div style="background: var(--bg-surface); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); display:flex; flex-direction:column; justify-content:space-between;">
+              <div>
+                <label style="margin-top:0;" data-i18n="lblQuickFlow">1. Relación de Flujo (Flow Ratio):</label>
+                <div style="font-size:1.5rem; font-weight:900; font-family:monospace; color:var(--accent-green);" id="bambuQuickFlow">0.98</div>
+                <small style="font-size:0.72rem; color:var(--text-muted);" data-i18n="lblQuickFlowHint">Casilla 'Flow ratio' en Bambu Studio</small>
+              </div>
+              <button type="button" class="btn-secondary" style="margin-top:8px; justify-content:center; padding:5px 8px; font-size:0.75rem;" onclick="copyQuickValue('bambuQuickFlow', this)" data-i18n="btnCopyVal">
+                📋 Copiar Flow Ratio
+              </button>
+            </div>
+
+            <!-- 2. TEMPERATURAS NOZZLE & CAMA -->
+            <div style="background: var(--bg-surface); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); display:flex; flex-direction:column; justify-content:space-between;">
+              <div>
+                <label style="margin-top:0;" data-i18n="lblQuickTemp">2. Temperatura Nozzle / Cama:</label>
+                <div style="font-size:1.25rem; font-weight:900; color:var(--accent-cyan); margin: 3px 0;" id="bambuQuickTemp">210 °C / 60 °C</div>
+                <small style="font-size:0.72rem; color:var(--text-muted);" id="bambuQuickTempSub">Boquilla y cama recomendadas</small>
+              </div>
+              <button type="button" class="btn-secondary" style="margin-top:8px; justify-content:center; padding:5px 8px; font-size:0.75rem;" onclick="copyQuickValue('bambuQuickTempOnly', this)" data-i18n="btnCopyTemp">
+                📋 Copiar Temp. Boquilla
+              </button>
+              <span id="bambuQuickTempOnly" style="display:none;">210</span>
+            </div>
+
+            <!-- 3. BOQUILLA MÍNIMA Y DUREZA -->
+            <div style="background: var(--bg-surface); padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); display:flex; flex-direction:column; justify-content:space-between;">
+              <div>
+                <label style="margin-top:0;" data-i18n="lblQuickNozzle">3. Diámetro y Tipo de Boquilla:</label>
+                <div style="font-size:1.1rem; font-weight:800; color:var(--accent-amber); margin: 4px 0;" id="bambuQuickNozzle">≥ 0.4 mm Estándar</div>
+                <small style="font-size:0.72rem; color:var(--text-muted);" id="bambuQuickNozzleSub">Previene atascos por aditivo o reciclaje</small>
+              </div>
+              <div style="font-size:0.72rem; font-weight:700; color:var(--accent-green); padding-top:6px; display:flex; align-items:center; gap:4px;">
+                <span>✔ Compatible Bambu AMS</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -987,6 +1034,15 @@
         btnExportJson: "📤 Exportar en JSON",
         btnImportJson: "📥 Importar desde JSON",
         btnGenerateLabel: "🏷️ Generar Etiqueta con Código QR",
+        bambuQuickTitle: "⚡ Ajustes Rápidos para Bambu Studio / OrcaSlicer",
+        bambuQuickSub: "Pega estos 3 valores en la pestaña 'Filamento' de tu laminador",
+        lblQuickFlow: "1. Relación de Flujo (Flow Ratio):",
+        lblQuickFlowHint: "Casilla 'Flow ratio' en Bambu Studio",
+        lblQuickTemp: "2. Temperatura Nozzle / Cama:",
+        lblQuickNozzle: "3. Diámetro y Tipo de Boquilla:",
+        btnCopyVal: "📋 Copiar Flow Ratio",
+        btnCopyTemp: "📋 Copiar Temp. Boquilla",
+        btnCopiedBadge: "✔ ¡Copiado!",
         modalLabelHeader: "Etiqueta Técnica de Bobina (M1/R1)",
         lblPrintWeight: "Peso Neto:",
         lblPrintM1Temp: "Temp. Extrusión M1:",
@@ -1122,6 +1178,15 @@
         btnExportJson: "📤 Export JSON",
         btnImportJson: "📥 Import JSON",
         btnGenerateLabel: "🏷️ Generate QR Spool Label",
+        bambuQuickTitle: "⚡ Quick Setup for Bambu Studio / OrcaSlicer",
+        bambuQuickSub: "Paste these 3 values into your slicer's 'Filament' tab",
+        lblQuickFlow: "1. Flow Ratio:",
+        lblQuickFlowHint: "'Flow ratio' field in Bambu Studio",
+        lblQuickTemp: "2. Nozzle / Bed Temperature:",
+        lblQuickNozzle: "3. Required Nozzle & Type:",
+        btnCopyVal: "📋 Copy Flow Ratio",
+        btnCopyTemp: "📋 Copy Nozzle Temp",
+        btnCopiedBadge: "✔ Copied!",
         modalLabelHeader: "Technical Spool Label (M1/R1)",
         lblPrintWeight: "Net Weight:",
         lblPrintM1Temp: "M1 Extrusion Temp:",
@@ -1257,6 +1322,15 @@
         btnExportJson: "📤 Exportar a JSON",
         btnImportJson: "📥 Importar des de JSON",
         btnGenerateLabel: "🏷️ Generar Etiqueta amb Codi QR",
+        bambuQuickTitle: "⚡ Ajustos Ràpids per a Bambu Studio / OrcaSlicer",
+        bambuQuickSub: "Enganxa aquests 3 valors a la pestanya 'Filament' del teu laminador",
+        lblQuickFlow: "1. Relació de Flux (Flow Ratio):",
+        lblQuickFlowHint: "Casella 'Flow ratio' a Bambu Studio",
+        lblQuickTemp: "2. Temperatura Broquet / Llit:",
+        lblQuickNozzle: "3. Diàmetre i Tipus de Broquet:",
+        btnCopyVal: "📋 Copiar Flow Ratio",
+        btnCopyTemp: "📋 Copiar Temp. Broquet",
+        btnCopiedBadge: "✔ Copiat!",
         modalLabelHeader: "Etiqueta Tècnica de Bobina (M1/R1)",
         lblPrintWeight: "Pes Net:",
         lblPrintM1Temp: "Temp. Extrusió M1:",
@@ -1392,6 +1466,15 @@
         btnExportJson: "📤 Exporter en JSON",
         btnImportJson: "📥 Importer depuis JSON",
         btnGenerateLabel: "🏷️ Générer Étiquette avec QR Code",
+        bambuQuickTitle: "⚡ Configuration Rapide Bambu Studio / OrcaSlicer",
+        bambuQuickSub: "Collez ces 3 valeurs dans l'onglet 'Filament' de votre trancheur",
+        lblQuickFlow: "1. Multiplicateur de Débit (Flow Ratio) :",
+        lblQuickFlowHint: "Champ 'Flow ratio' dans Bambu Studio",
+        lblQuickTemp: "2. Température Buse / Plateau :",
+        lblQuickNozzle: "3. Diamètre et Type de Buse :",
+        btnCopyVal: "📋 Copier Flow Ratio",
+        btnCopyTemp: "📋 Copier Temp. Buse",
+        btnCopiedBadge: "✔ Copié !",
         modalLabelHeader: "Étiquette Technique Bobine (M1/R1)",
         lblPrintWeight: "Poids Net :",
         lblPrintM1Temp: "Temp. Extrusión M1 :",
@@ -1527,6 +1610,15 @@
         btnExportJson: "📤 Als JSON Exportieren",
         btnImportJson: "📥 Aus JSON Importieren",
         btnGenerateLabel: "🏷️ QR-Etikett Generieren",
+        bambuQuickTitle: "⚡ Schnelleinstellungen für Bambu Studio / OrcaSlicer",
+        bambuQuickSub: "Fügen Sie diese 3 Werte in den Reiter 'Filament' Ihres Slicers ein",
+        lblQuickFlow: "1. Flussrate (Flow Ratio):",
+        lblQuickFlowHint: "Feld 'Flow ratio' in Bambu Studio",
+        lblQuickTemp: "2. Düsen- / Druckbetttemperatur:",
+        lblQuickNozzle: "3. Empfohlene Düse & Typ:",
+        btnCopyVal: "📋 Flow Ratio Kopieren",
+        btnCopyTemp: "📋 Düsentemp. Kopieren",
+        btnCopiedBadge: "✔ Kopiert!",
         modalLabelHeader: "Technisches Spulenetikett (M1/R1)",
         lblPrintWeight: "Nettogewicht:",
         lblPrintM1Temp: "M1 Extrusionstemp.:",
@@ -2037,6 +2129,38 @@
       const tBar = document.getElementById('toleranceBar');
       tBar.style.width = `${Math.min(100, Math.max(10, (tolerance / 0.10) * 100))}%`;
 
+      const printTempRec = addSpec.isBio ? Math.min(195, parseInt(mat.nozzle.split('-')[0])) : parseInt(mat.nozzle.split('-')[0]);
+      const bedTempRec = parseInt(mat.bed.split('-')[0]);
+
+      // 1. Flow Ratio directo
+      const quickFlowEl = document.getElementById('bambuQuickFlow');
+      if (quickFlowEl) quickFlowEl.innerText = avgFlow;
+
+      // 2. Temperaturas combinadas
+      const quickTempEl = document.getElementById('bambuQuickTemp');
+      if (quickTempEl) quickTempEl.innerText = `${printTempRec} °C / ${bedTempRec} °C`;
+      const quickTempOnlyEl = document.getElementById('bambuQuickTempOnly');
+      if (quickTempOnlyEl) quickTempOnlyEl.innerText = printTempRec.toString();
+
+      // 3. Boquilla mínima y dureza según aditivos
+      const quickNozzleEl = document.getElementById('bambuQuickNozzle');
+      if (quickNozzleEl) {
+        if (addKey === 'cf') {
+          quickNozzleEl.innerText = '≥ 0.6 mm Acero Endurecido';
+          quickNozzleEl.style.color = '#ff5722';
+        } else if (addSpec.isBio || addKey === 'wood') {
+          quickNozzleEl.innerText = '≥ 0.5 - 0.6 mm (Latón/Endurecido)';
+          quickNozzleEl.style.color = 'var(--accent-amber)';
+        } else if (addKey === 'glow') {
+          quickNozzleEl.innerText = '≥ 0.5 mm Acero / Rubí';
+          quickNozzleEl.style.color = '#ff5722';
+        } else {
+          quickNozzleEl.innerText = '≥ 0.4 mm Estándar (Latón)';
+          quickNozzleEl.style.color = 'var(--accent-green)';
+        }
+      }
+
+      // Alertas y Restricciones Térmicas para Aditivos Bio-Orgánicos (Café / Flores / Madera)
       const bioAlert = document.getElementById('bioThermalAlert');
       if (addSpec.isBio && addPct > 0) {
         bioAlert.style.display = 'block';
@@ -2045,7 +2169,6 @@
         bioAlert.style.display = 'none';
       }
 
-      const printTempRec = addSpec.isBio ? Math.min(195, parseInt(mat.nozzle.split('-')[0])) : parseInt(mat.nozzle.split('-')[0]);
       const slicerJson = {
         "filament_name": `Creality M1 ${addSpec.isBio ? 'Bio-Composite ' + addSpec.name : mat.name} [${recyclePct}% R1]`,
         "polymer_type": addSpec.isBio ? 'PLA-Bio-Organic' : matKey.split('-')[0],
@@ -2289,6 +2412,31 @@
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
+    }
+
+    function copyQuickValue(elementId, btn) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const text = el.innerText || el.textContent;
+      const ta = document.createElement('textarea');
+      ta.value = text.trim();
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+
+      if (btn) {
+        const dict = I18N[currentLang] || I18N['es'];
+        const originalText = btn.innerHTML;
+        btn.innerHTML = dict.btnCopiedBadge || '✔ ¡Copiado!';
+        btn.style.borderColor = 'var(--accent-green)';
+        btn.style.color = 'var(--accent-green)';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 1500);
+      }
     }
 
     function drawQrCodeOnCanvas(canvasId, text) {
