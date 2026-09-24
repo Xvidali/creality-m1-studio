@@ -1,0 +1,2571 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Creality M1 & R1 Master Studio Pro | Laboratorio de Extrusión y Reciclaje</title>
+  <meta name="description" content="Suite integral para Creality M1 y R1: formulación de pigmentos CMYKW, compensación de tolerancia, compuestos exóticos, planificador de producción y generador de etiquetas con QR en español.">
+  <meta name="theme-color" content="#101115">
+
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Creality%20M1%2FR1%20Master%20Studio%20Pro%22%2C%22short_name%22%3A%22M1%2FR1%20Studio%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23101115%22%2C%22theme_color%22%3A%22%2300d26a%22%7D">
+
+  <style>
+    :root[data-theme="dark"] {
+      --bg-base: #0c0d12;
+      --bg-surface: #141720;
+      --bg-surface-elevated: #1b1f2c;
+      --bg-input: #232839;
+      --text-primary: #f2f4f8;
+      --text-secondary: #9098b0;
+      --text-muted: #646d88;
+      --border: #2c3246;
+      --accent-green: #00d26a;
+      --accent-green-glow: rgba(0, 210, 106, 0.25);
+      --accent-amber: #ff9800;
+      --accent-cyan: #00b4d8;
+      --accent-purple: #9d4edd;
+      --alert-bg: rgba(255, 87, 34, 0.14);
+      --alert-border: #ff5722;
+      --alert-text: #ffab91;
+      --card-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+      --chip-border: #3b435b;
+    }
+
+    :root[data-theme="light"] {
+      --bg-base: #f0f3f8;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f5f7fc;
+      --bg-input: #e9edf5;
+      --text-primary: #12151f;
+      --text-secondary: #5a6279;
+      --text-muted: #828ca4;
+      --border: #d4dae8;
+      --accent-green: #0c9e54;
+      --accent-green-glow: rgba(12, 158, 84, 0.2);
+      --accent-amber: #e67e00;
+      --accent-cyan: #0288d1;
+      --accent-purple: #7b2cbf;
+      --alert-bg: rgba(230, 81, 0, 0.1);
+      --alert-border: #f4511e;
+      --alert-text: #b73206;
+      --card-shadow: 0 10px 28px rgba(26, 38, 64, 0.08);
+      --chip-border: #c0c8dc;
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+
+    body {
+      margin: 0;
+      padding: 12px 10px 80px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 890px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Pestañas de navegación con scroll horizontal accesible */
+    .nav-tabs-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      gap: 6px;
+    }
+
+    .nav-scroll-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      width: 32px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      user-select: none;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .nav-scroll-btn:hover {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 4px 6px 8px 2px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      flex: 1;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      height: 6px;
+    }
+    .nav-tabs::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .nav-tabs::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+    .nav-tabs::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-green);
+    }
+
+    .tab-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 9px 15px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .tab-btn:last-child {
+      margin-right: 12px;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-green);
+      color: #06140c;
+      border-color: var(--accent-green);
+      box-shadow: 0 4px 14px var(--accent-green-glow);
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* Tarjetas y Contenedores */
+    .card {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--accent-green);
+      letter-spacing: -0.02em;
+    }
+
+    .header-sub {
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      margin-top: 3px;
+    }
+
+    .actions-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-pill {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-pill:hover { border-color: var(--accent-green); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      margin: 8px 0 4px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--accent-green); }
+
+    .panel-block {
+      background: var(--bg-surface-elevated);
+      border-radius: 12px;
+      padding: 13px;
+      border: 1px solid var(--border);
+    }
+    .panel-block.accent-green { border-left: 4px solid var(--accent-green); }
+    .panel-block.accent-amber { border-left: 4px solid var(--accent-amber); }
+    .panel-block.accent-cyan  { border-left: 4px solid var(--accent-cyan); }
+    .panel-block.accent-purple{ border-left: 4px solid var(--accent-purple); }
+
+    .panel-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    /* Visualizador de Bobina en Canvas */
+    .spool-visualizer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-surface-elevated);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      position: relative;
+    }
+
+    #spoolCanvas {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .spool-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      margin-top: 10px;
+    }
+
+    .legend-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Barras de Tolerancia */
+    .tolerance-meter {
+      height: 12px;
+      background: var(--bg-input);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      margin: 8px 0;
+    }
+
+    .tolerance-fill {
+      height: 100%;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #00d26a, #ff9800);
+      transition: width 0.3s ease;
+    }
+
+    .tolerance-target-marker {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #ffffff;
+      box-shadow: 0 0 4px #000;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.86rem;
+    }
+    .summary-row:last-child { border-bottom: none; }
+
+    .val-highlight {
+      font-weight: 800;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--accent-green);
+    }
+    .val-amber { color: var(--accent-amber); }
+    .val-cyan { color: var(--accent-cyan); }
+    .val-purple { color: var(--accent-purple); }
+
+    .alert-box {
+      background: var(--alert-bg);
+      border: 1px solid var(--alert-border);
+      color: var(--alert-text);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .btn-main {
+      width: 100%;
+      background: var(--accent-green);
+      color: #06140c;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-main:hover { filter: brightness(1.08); }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-secondary:hover { border-color: var(--accent-green); }
+
+    .btn-icon {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      padding: 5px 8px;
+      cursor: pointer;
+    }
+
+    .code-block {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      color: var(--text-primary);
+      overflow-x: auto;
+      white-space: pre;
+      margin: 8px 0;
+    }
+
+    /* Modal de Etiqueta Imprimible */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 14px;
+    }
+
+    .modal-window {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .printable-label {
+      background: #ffffff !important;
+      color: #080808 !important;
+      border: 2.5px solid #000000;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 12px 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .label-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+    }
+
+    .label-body-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .label-qr-box {
+      width: 82px;
+      height: 82px;
+      background: #fff;
+      border: 1px solid #000;
+      padding: 3px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .label-qr-box canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    @media print {
+      body * { visibility: hidden !important; }
+      .printable-label, .printable-label * { visibility: visible !important; }
+      .printable-label {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 75mm;
+        margin: 0;
+        border: 2.5px solid #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+    <div class="card">
+      <div class="header-bar">
+        <div class="header-title">
+          <h1 data-i18n="appTitle">⚙️ Creality M1 & R1 Master Studio Pro</h1>
+          <div class="header-sub" data-i18n="appSubtitle">Extrusora M1 (±0.05 mm) • Trituradora R1 • Laboratorio Cromático CMYKW & Compuestos Exóticos</div>
+        </div>
+        <div class="actions-row">
+          <select id="langSelect" onchange="changeLanguage(this.value)" class="btn-pill" style="padding: 4px 8px; cursor: pointer;">
+            <option value="es">🇪🇸 Español</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="ca">🇦🇩 Català</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="de">🇩🇪 Deutsch</option>
+          </select>
+          <button type="button" class="btn-pill" id="installPwaBtn" style="display:none;" onclick="triggerInstallPwa()"><span data-i18n="installApp">📲 Instalar App</span></button>
+          <button type="button" class="btn-pill" onclick="toggleTheme()"><span id="themeIcon">☀️</span> <span id="themeLabel">Modo Claro</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestañas Superiores con Controles de Desplazamiento -->
+    <div class="nav-tabs-wrapper">
+      <button type="button" class="nav-scroll-btn" onclick="scrollTabs(-180)" title="Desplazar a la izquierda">◀</button>
+      <div class="nav-tabs" id="navTabsContainer">
+        <button type="button" class="tab-btn active" onclick="switchTab('tab-blend', event)" data-i18n="tabBlend">🎨 Mezcla & Colorimetría</button>
+        <button type="button" class="tab-btn" onclick="switchTab('tab-simulator', event)" data-i18n="tabSimulator">📐 Simulador de Tolerancia</button>
+        <button type="button" class="tab-btn" onclick="switchTab('tab-exotics', event)" data-i18n="tabExotics">🧪 Compuestos Exóticos</button>
+        <button type="button" class="tab-btn" onclick="switchTab('tab-production', event)" data-i18n="tabProduction">⏱️ Producción & Temporizador</button>
+        <button type="button" class="tab-btn" onclick="switchTab('tab-recipes', event)" data-i18n="tabRecipes">📖 Recetario & Etiquetas QR</button>
+      </div>
+      <button type="button" class="nav-scroll-btn" onclick="scrollTabs(180)" title="Desplazar a la derecha">▶</button>
+    </div>
+
+    <!-- PESTAÑA 1: FORMULACIÓN & COLORIMETRÍA -->
+    <div class="tab-pane active" id="tab-blend">
+      <div class="grid-2">
+        <div class="card">
+          <div class="panel-title"><span data-i18n="basePolymerTitle">🧵 Polímero Base & Desecho</span></div>
+          <div class="grid-2">
+            <div>
+              <label for="materialSelect" data-i18n="lblBasePolymer">Polímero Base:</label>
+              <select id="materialSelect" onchange="onMaterialChange()">
+                <option value="PLA">PLA Estándar (1.24 g/cm³)</option>
+                <option value="PLA-CF">PLA-CF Carbono (1.29 g/cm³)</option>
+                <option value="PETG">PETG Resistente (1.27 g/cm³)</option>
+                <option value="ABS">ABS Técnico (1.05 g/cm³)</option>
+                <option value="TPU">TPU Flexible 95A (1.21 g/cm³)</option>
+              </select>
+            </div>
+            <div>
+              <label for="recyclePct" data-i18n="lblRecyclePct">% Desecho Triturado R1:</label>
+              <input type="number" id="recyclePct" value="50" min="0" max="100" step="5" oninput="calcAll()">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label for="targetWeight" data-i18n="lblTargetWeight">Peso Objetivo Bobina (g):</label>
+              <input type="number" id="targetWeight" value="1000" min="200" step="50" oninput="calcAll()">
+            </div>
+            <div>
+              <label for="purgeWeight" data-i18n="lblPurgeWeight">Purga y Ajuste M1 (g):</label>
+              <input type="number" id="purgeWeight" value="60" min="10" step="10" oninput="calcAll()">
+            </div>
+          </div>
+
+          <div class="panel-block accent-amber" style="margin-top: 10px;">
+            <div class="panel-title" style="color:var(--accent-amber);"><span data-i18n="scrapColorTitle">♻️ Color de Restos Triturados (R1)</span></div>
+            <select id="scrapPreset" onchange="applyScrapPreset()">
+              <option value="clear">Neutro / Natural / Transparente</option>
+              <option value="white">Blanco Sólido</option>
+              <option value="black">Negro Carbón</option>
+              <option value="red">Rojo</option>
+              <option value="blue">Azul</option>
+              <option value="yellow">Amarillo</option>
+              <option value="green">Verde</option>
+              <option value="custom">Color personalizado de restos...</option>
+            </select>
+            <div id="scrapPickerContainer" style="display:none; margin-top:8px;">
+              <input type="color" id="scrapPicker" value="#2060e6" oninput="manualScrapPick()" style="height:36px; padding:2px; cursor:pointer;">
+            </div>
+          </div>
+
+          <div class="panel-block accent-green" style="margin-top: 10px;">
+            <div class="panel-title" style="color:var(--accent-green);"><span data-i18n="targetColorTitle">🎯 Color Deseado de la Bobina</span></div>
+            <div class="grid-2">
+              <div>
+                <select id="targetPreset" onchange="applyTargetPreset()">
+                  <option value="emerald_green" selected>Verde Esmeralda</option>
+                  <option value="primary_red">Rojo Fuego</option>
+                  <option value="primary_blue">Azul Eléctrico</option>
+                  <option value="primary_yellow">Amarillo Sol</option>
+                  <option value="deep_purple">Púrpura / Violeta</option>
+                  <option value="vibrant_orange">Naranja Vivo</option>
+                  <option value="pure_white">Blanco Nieve</option>
+                  <option value="jet_black">Negro Azabache</option>
+                  <option value="custom">Tono Libre Personalizado...</option>
+                </select>
+              </div>
+              <div>
+                <input type="color" id="targetPicker" value="#14b44b" oninput="manualTargetPick()" style="height:36px; padding:2px; cursor:pointer;">
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <label for="colorLoad" data-i18n="lblColorLoad">% Concentración Colorante (Masterbatch):</label>
+              <input type="number" id="colorLoad" value="2.0" step="0.1" min="0.5" max="6.0" oninput="calcAll()">
+            </div>
+          </div>
+          <div id="alertBox" class="alert-box" style="margin-top:10px;"></div>
+        </div>
+
+        <!-- Vista Previa de Bobina M1 en Canvas -->
+        <div class="card">
+          <div class="panel-title"><span data-i18n="spoolVisualizerTitle">👁️ Simulación Visual de Bobina M1</span></div>
+          <div class="spool-visualizer-container">
+            <canvas id="spoolCanvas" width="320" height="240"></canvas>
+            <div class="spool-legend">
+              <div class="legend-badge"><span class="legend-circle" id="legendCore" style="background:#14b44b;"></span><span data-i18n="legendFilament">Filamento Extruido</span></div>
+              <div class="legend-badge" id="legendAdditiveBadge" style="display:none;"><span class="legend-circle" id="legendAddCircle" style="background:#333;"></span><span data-i18n="legendAdditive">Carga Especial</span></div>
+              <div class="legend-badge"><span data-i18n="legendGauge">Calibre: 1.75 mm</span></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 12px;">
+            <div class="summary-row"><span data-i18n="sumTotalBatch">Total mezcla a cargar en tolva:</span><span class="val-highlight" id="totalPrepDisp">0.0 g</span></div>
+            <div class="summary-row"><span data-i18n="sumScrapReq">♻️ Restos triturados R1 requeridos:</span><span class="val-highlight val-amber" id="scrapDisp">0.0 g</span></div>
+            <div class="summary-row"><span data-i18n="sumVirginReq">⚪ Pellets vírgenes neutros:</span><span class="val-highlight" id="virginDisp">0.0 g</span></div>
+            <div class="summary-row"><span data-i18n="sumColorReq">🎨 Total Masterbatch neto extra:</span><span class="val-highlight val-cyan" id="colorTotalDisp">0.00 g</span></div>
+            <div class="panel-block" id="pigmentBreakdown" style="margin-top:8px; padding:6px 10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 2: SIMULADOR DE TOLERANCIA MECÁNICA & FLUJO -->
+    <div class="tab-pane" id="tab-simulator">
+      <div class="card">
+        <div class="panel-title">
+          <span data-i18n="simTitle">📐 Simulador de Tolerancia Creality M1 & Calibración de Flujo</span>
+          <span class="val-highlight" id="toleranceDisp">±0.075 mm</span>
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.82rem; margin-top:0;" data-i18n="simDesc">
+          La extrusora Creality M1 garantiza <strong>±0.05 mm</strong> con pellets 100% vírgenes y aumenta hasta <strong>±0.10 mm</strong> con 100% desecho R1 debido a la dispersión de peso molecular. Este motor calcula la desviación volumétrica y te prescribe el <strong>Multiplicador de Flujo (Flow Ratio)</strong> exacto para compensarlo en tu laminador.
+        </p>
+
+        <div class="panel-block accent-cyan">
+          <div style="display:flex; justify-content:space-between; font-size:0.82rem;">
+            <span data-i18n="lblDiaRange">Rango Estimado de Diámetro:</span>
+            <strong id="diaRangeDisp">1.67 mm - 1.83 mm</strong>
+          </div>
+          <div class="tolerance-meter">
+            <div class="tolerance-target-marker"></div>
+            <div class="tolerance-fill" id="toleranceBar" style="width: 50%;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-muted);">
+            <span>1.65 mm (-6%)</span>
+            <span>1.75 mm (Nominal)</span>
+            <span>1.85 mm (+6%)</span>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top:14px;">
+          <div class="panel-block">
+            <label data-i18n="lblVolError">Desviación Volumétrica:</label>
+            <div class="val-highlight" style="font-size:1.1rem;" id="volErrorDisp">± 5.7%</div>
+            <small style="color:var(--text-muted);" data-i18n="lblVolErrorSub">Variación de extrusión esperada</small>
+          </div>
+          <div class="panel-block">
+            <label data-i18n="lblFlowRatio">Multiplicador de Flujo (Flow Ratio):</label>
+            <div class="val-highlight val-cyan" style="font-size:1.1rem;" id="flowRatioDisp">0.97 - 0.99</div>
+            <small style="color:var(--text-muted);" data-i18n="lblFlowRatioSub">Para Orca, Bambu o PrusaSlicer</small>
+          </div>
+          <div class="panel-block">
+            <label data-i18n="lblMfi">Aumento de Fluidez (MFI):</label>
+            <div class="val-highlight val-amber" style="font-size:1.1rem;" id="mfiDisp">+14% fluidez</div>
+            <small style="color:var(--text-muted);" data-i18n="lblMfiSub">Por degradación térmica R1</small>
+          </div>
+        </div>
+
+        <div class="panel-title" style="margin-top:18px;">
+          <span data-i18n="lblSlicerSnippetTitle">📋 Snippet de Configuración para Laminador</span>
+          <button type="button" class="btn-secondary" onclick="copySlicerSnippet()" data-i18n="btnCopySnippet">📋 Copiar Perfil</button>
+        </div>
+        <div class="code-block" id="slicerJsonSnippet">// Cargando fragmento de configuración para slicer...</div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 3: COMPUESTOS EXÓTICOS & ADITIVOS -->
+    <div class="tab-pane" id="tab-exotics">
+      <div class="card">
+        <div class="panel-title">
+          <span data-i18n="exoticsTitle">🧪 Laboratorio de Compuestos Exóticos & Refuerzo</span>
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.82rem; margin-top:0;" data-i18n="exoticsDesc">
+          La extrusora Creality M1 permite incorporar cargas minerales, fibras cortadas o biomasa orgánica deshidratada (como posos de café o pétalos en polvo). Selecciona un compuesto para conocer la dosificación, límites térmicos para evitar pirolisis/carbonización en el barril y la boquilla recomendada.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <label for="additiveType" data-i18n="lblAdditiveType">Carga o Aditivo Especial:</label>
+            <select id="additiveType" onchange="onAdditiveChange()">
+              <option value="none">Ninguno (Filamento estándar monomaterial)</option>
+              <option value="coffee">☕ Café Molido / Posos Deshidratados (Scented Coffee Bio-PLA)</option>
+              <option value="flowers">🌸 Flores en Polvo / Pétalos Triturados (Lavanda, Rosa, Manzanilla)</option>
+              <option value="cf">Fibra de Carbono Cortada (Milled CF) (15% en peso)</option>
+              <option value="wood">Harina de Madera Orgánica (Pino) (20% en peso)</option>
+              <option value="glow">Polvo Fosforescente / Glow (8% en peso)</option>
+              <option value="glitter">Purpurina Perlada / Flakes de Mica (2% en peso)</option>
+              <option value="foam">Agente Espumante Activo / Ligero (3% en peso)</option>
+            </select>
+          </div>
+          <div>
+            <label for="additivePct" data-i18n="lblAdditivePct">% Carga Personalizada (% en peso):</label>
+            <input type="number" id="additivePct" value="0" min="0" max="40" step="0.5" oninput="calcAll()">
+          </div>
+        </div>
+
+        <div class="panel-block accent-purple" style="margin-top:12px;">
+          <div class="panel-title" style="color:var(--accent-purple);"><span id="additiveNameTitle">Refuerzo Seleccionado</span></div>
+          <div class="grid-3">
+            <div>
+              <label data-i18n="lblAdditiveWeight">Cantidad de Aditivo:</label>
+              <div class="val-highlight val-purple" id="additiveWeightDisp">0.0 g</div>
+            </div>
+            <div>
+              <label data-i18n="lblNozzleReq">Boquilla 3D Exigida:</label>
+              <div class="val-highlight" id="nozzleReqDisp">Latón / Cobre ≥ 0.4 mm</div>
+            </div>
+            <div>
+              <label data-i18n="lblWearReq">Desgaste Husillo M1:</label>
+              <div class="val-highlight val-amber" id="wearDisp">Bajo / Estándar</div>
+            </div>
+          </div>
+          <div id="bioThermalAlert" class="alert-box" style="margin-top:10px; display:none; background:rgba(255, 152, 0, 0.15); border-color:#ff9800; color:#ffb74d;"></div>
+          <p id="additiveTip" style="font-size:0.8rem; color:var(--text-secondary); margin-top:8px; line-height:1.4;">
+            Sin aditivos exóticos seleccionados.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 4: PLANIFICADOR DE PRODUCCIÓN & TEMPORIZADOR -->
+    <div class="tab-pane" id="tab-production">
+      <div class="card">
+        <div class="panel-title"><span data-i18n="prodTitle">⏱️ Planificador de Extrusión M1 & Temporizador de Taller</span></div>
+        <p style="color:var(--text-secondary); font-size:0.82rem; margin-top:0;" data-i18n="prodDesc">
+          Rendimiento Creality M1 según composición: <strong>1000 g/h</strong> (pellets vírgenes), <strong>600 g/h</strong> (50% reciclado R1), <strong>500 g/h</strong> (100% triturado R1).
+        </p>
+
+        <div class="grid-3">
+          <div class="panel-block">
+            <label data-i18n="lblThroughput">Velocidad de Extrusión:</label>
+            <div class="val-highlight" id="throughputDisp">600 g/h</div>
+            <small style="color:var(--text-muted);" id="throughputSub" data-i18n="lblThroughputSub">Ajustada por % de desecho R1</small>
+          </div>
+          <div class="panel-block">
+            <label data-i18n="lblDuration">Duración Estimada:</label>
+            <div class="val-highlight val-cyan" id="durationDisp">1h 46m</div>
+            <small style="color:var(--text-muted);" data-i18n="lblDurationSub">Incluye purga inicial</small>
+          </div>
+          <div class="panel-block">
+            <label data-i18n="lblEta">Hora de Finalización (ETA):</label>
+            <div class="val-highlight val-amber" id="etaDisp">--:--</div>
+            <small style="color:var(--text-muted);" data-i18n="lblEtaSub">Hora local del taller</small>
+          </div>
+        </div>
+
+        <div class="panel-block accent-green" style="margin-top:14px; text-align:center;">
+          <label style="margin-bottom:8px;" data-i18n="lblLiveTimer">Temporizador en Vivo de Extrusión</label>
+          <div style="font-size:2.4rem; font-weight:900; font-family:monospace; color:var(--accent-green); margin:6px 0;" id="timerClock">00:00:00</div>
+          <div style="display:flex; justify-content:center; gap:10px; margin-top:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-main" style="width:auto; padding:10px 22px;" id="timerStartBtn" onclick="toggleExtrusionTimer()">▶ Iniciar Extrusión</button>
+            <button type="button" class="btn-secondary" onclick="resetExtrusionTimer()" data-i18n="btnTimerReset">↺ Reiniciar</button>
+            <button type="button" class="btn-secondary" onclick="testAlarmChime()" data-i18n="btnTestChime">🔔 Probar Alarma Acústica</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rendimiento Económico y Ahorro -->
+      <div class="card">
+        <div class="panel-title"><span data-i18n="ecoTitle">💰 Rendimiento Económico por Bobina</span></div>
+        <div class="grid-3">
+          <div>
+            <label for="virginPrice" data-i18n="lblVirginPrice">Pellets Vírgenes (€/kg):</label>
+            <input type="number" id="virginPrice" value="12.0" step="0.5" oninput="calcAll()">
+          </div>
+          <div>
+            <label for="masterPrice" data-i18n="lblMasterPrice">Colorante Masterbatch (€/100g):</label>
+            <input type="number" id="masterPrice" value="4.0" step="0.5" oninput="calcAll()">
+          </div>
+          <div>
+            <label for="marketPrice" data-i18n="lblMarketPrice">Precio Mercado Bobina (€/kg):</label>
+            <input type="number" id="marketPrice" value="20.0" step="1.0" oninput="calcAll()">
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top:10px;">
+          <div class="summary-row"><span data-i18n="lblSpoolCost">Coste Neto por Bobina Producida:</span><span class="val-highlight" id="totalCostDisp">0.00 €</span></div>
+          <div class="summary-row"><span data-i18n="lblSpoolSavings">Ahorro Neto Frente a Comercial:</span><span class="val-highlight" style="color:var(--accent-green);" id="savingsDisp">+0.00 € (0%)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 5: RECETAS, QR & ETIQUETAS -->
+    <div class="tab-pane" id="tab-recipes">
+      <div class="card">
+        <div class="panel-title"><span data-i18n="recipesTitle">📖 Color Book & Biblioteca de Mezclas</span></div>
+        <div class="grid-2" style="align-items:flex-end;">
+          <div>
+            <label for="recipeName" data-i18n="lblRecipeName">Nombre de la Receta:</label>
+            <input type="text" id="recipeName" placeholder="Ej: Verde Militar CF Pro">
+          </div>
+          <button type="button" class="btn-main" onclick="saveCurrentRecipe()" data-i18n="btnSaveRecipe">💾 Guardar Receta Actual</button>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;">
+          <button type="button" class="btn-secondary" onclick="exportRecipesJson()" data-i18n="btnExportJson">📤 Exportar en JSON</button>
+          <button type="button" class="btn-secondary" onclick="triggerImportJson()" data-i18n="btnImportJson">📥 Importar desde JSON</button>
+          <input type="file" id="jsonFileInput" accept=".json" style="display:none;" onchange="importRecipesJson(event)">
+          <button type="button" class="btn-secondary" onclick="openLabelModal()" data-i18n="btnGenerateLabel">🏷️ Generar Etiqueta con Código QR</button>
+        </div>
+
+        <div class="recipe-list" id="recipeListContainer" style="display:flex; flex-direction:column; gap:8px; margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ETIQUETA TÉCNICA DE BOBINA CON QR IMPRIMIBLE -->
+  <div class="modal-overlay" id="labelModal">
+    <div class="modal-window">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0; font-size:1.1rem;" data-i18n="modalLabelHeader">Etiqueta Técnica de Bobina (M1/R1)</h3>
+        <button type="button" class="btn-icon" onclick="closeLabelModal()">✕</button>
+      </div>
+
+      <div class="printable-label" id="printableSpoolLabel">
+        <div class="label-header">
+          <div>
+            <div style="font-size:1.15rem; font-weight:900;" id="lblMaterial">PLA ESTÁNDAR</div>
+            <div style="font-size:0.78rem; color:#444;" id="lblRecipeName">Verde Esmeralda</div>
+          </div>
+          <div style="font-size:0.7rem; font-weight:800; background:#000; color:#fff; padding:3px 6px; border-radius:4px;" id="lblRecycleTag">50% RECICLADO R1</div>
+        </div>
+
+        <div class="label-body-grid">
+          <div>
+            <div style="font-size:0.8rem;"><strong data-i18n="lblPrintWeight">Peso Neto:</strong> <span id="lblWeight">1000 g</span></div>
+            <div style="font-size:0.8rem;"><strong data-i18n="lblPrintM1Temp">Temp. Extrusión M1:</strong> <span id="lblM1Temp">202 °C</span></div>
+            <div style="font-size:0.8rem;"><strong data-i18n="lblPrintFlowRatio">Flow Ratio Slicer:</strong> <span id="lblFlowRatio">0.98</span></div>
+            <div style="font-size:0.8rem;"><strong data-i18n="lblPrintFdmTemp">Impresión 3D:</strong> <span id="lblPrintTemp">210°C / 60°C</span></div>
+            <div style="font-size:0.8rem;"><strong data-i18n="lblPrintBatch">Lote de Extrusión:</strong> <span id="lblBatch">M1-2026-X</span></div>
+          </div>
+          <div class="label-qr-box">
+            <canvas id="qrCanvas" width="80" height="80"></canvas>
+          </div>
+        </div>
+
+        <div style="border-top:1.5px dashed #444; padding-top:6px; font-size:0.7rem; display:flex; justify-content:space-between;">
+          <span>Creality M1 & R1 Lab Suite</span>
+          <span id="lblColorSample" style="display:inline-block; width:12px; height:12px; border-radius:50%; border:1px solid #000; background:#14b44b;"></span>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button type="button" class="btn-main" onclick="window.print()" data-i18n="btnPrintLabel">🖨️ Imprimir Etiqueta</button>
+        <button type="button" class="btn-secondary" onclick="closeLabelModal()" data-i18n="btnCloseModal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = 'es';
+
+    const I18N = {
+      es: {
+        appTitle: "⚙️ Creality M1 & R1 Master Studio Pro",
+        appSubtitle: "Extrusora M1 (±0.05 mm) • Trituradora R1 • Laboratorio Cromático CMYKW & Compuestos Exóticos",
+        installApp: "📲 Instalar App",
+        themeLight: "Modo Claro",
+        themeDark: "Modo Oscuro",
+        tabBlend: "🎨 Mezcla & Colorimetría",
+        tabSimulator: "📐 Simulador de Tolerancia",
+        tabExotics: "🧪 Compuestos Exóticos",
+        tabProduction: "⏱️ Producción & Temporizador",
+        tabRecipes: "📖 Recetario & Etiquetas QR",
+        basePolymerTitle: "🧵 Polímero Base & Desecho",
+        lblBasePolymer: "Polímero Base:",
+        lblRecyclePct: "% Desecho Triturado R1:",
+        lblTargetWeight: "Peso Objetivo Bobina (g):",
+        lblPurgeWeight: "Purga y Ajuste M1 (g):",
+        scrapColorTitle: "♻️ Color de Restos Triturados (R1)",
+        targetColorTitle: "🎯 Color Deseado de la Bobina",
+        lblColorLoad: "% Concentración Colorante (Masterbatch):",
+        spoolVisualizerTitle: "👁️ Simulación Visual de Bobina M1",
+        legendFilament: "Filamento Extruido",
+        legendAdditive: "Carga Especial",
+        legendGauge: "Calibre: 1.75 mm",
+        sumTotalBatch: "Total mezcla a cargar en tolva:",
+        sumScrapReq: "♻️ Restos triturados R1 requeridos:",
+        sumVirginReq: "⚪ Pellets vírgenes neutros:",
+        sumColorReq: "🎨 Total Masterbatch neto extra:",
+        simTitle: "📐 Simulador de Tolerancia Creality M1 & Calibración de Flujo",
+        simDesc: "La extrusora Creality M1 garantiza <strong>±0.05 mm</strong> con pellets 100% vírgenes y aumenta hasta <strong>±0.10 mm</strong> con 100% desecho R1 debido a la dispersión de peso molecular. Este motor calcula la desviación volumétrica y te prescribe el <strong>Multiplicador de Flujo (Flow Ratio)</strong> exacto para compensarlo en tu laminador.",
+        lblDiaRange: "Rango Estimado de Diámetro:",
+        lblVolError: "Desviación Volumétrica:",
+        lblVolErrorSub: "Variación de extrusión esperada",
+        lblFlowRatio: "Multiplicador de Flujo (Flow Ratio):",
+        lblFlowRatioSub: "Para Orca, Bambu o PrusaSlicer",
+        lblMfi: "Aumento de Fluidez (MFI):",
+        lblMfiSub: "Por degradación térmica R1",
+        lblSlicerSnippetTitle: "📋 Snippet de Configuración para Laminador",
+        btnCopySnippet: "📋 Copiar Perfil",
+        exoticsTitle: "🧪 Laboratorio de Compuestos Exóticos & Refuerzo",
+        exoticsDesc: "La extrusora Creality M1 permite incorporar cargas minerales, fibras cortadas o biomasa orgánica deshidratada (como posos de café o pétalos en polvo). Selecciona un compuesto para conocer la dosificación, límites térmicos para evitar pirolisis/carbonización en el barril y la boquilla recomendada.",
+        lblAdditiveType: "Carga o Aditivo Especial:",
+        lblAdditivePct: "% Carga Personalizada (% en peso):",
+        lblAdditiveWeight: "Cantidad de Aditivo:",
+        lblNozzleReq: "Boquilla 3D Exigida:",
+        lblWearReq: "Desgaste Husillo M1:",
+        prodTitle: "⏱️ Planificador de Extrusión M1 & Temporizador de Taller",
+        prodDesc: "Rendimiento Creality M1 según composición: <strong>1000 g/h</strong> (pellets vírgenes), <strong>600 g/h</strong> (50% reciclado R1), <strong>500 g/h</strong> (100% triturado R1).",
+        lblThroughput: "Velocidad de Extrusión:",
+        lblThroughputSub: "Ajustada por % de desecho R1",
+        lblDuration: "Duración Estimada:",
+        lblDurationSub: "Incluye purga inicial",
+        lblEta: "Hora de Finalización (ETA):",
+        lblEtaSub: "Hora local del taller",
+        lblLiveTimer: "Temporizador en Vivo de Extrusión",
+        btnTimerReset: "↺ Reiniciar",
+        btnTestChime: "🔔 Probar Alarma Acústica",
+        ecoTitle: "💰 Rendimiento Económico por Bobina",
+        lblVirginPrice: "Pellets Vírgenes (€/kg):",
+        lblMasterPrice: "Colorante Masterbatch (€/100g):",
+        lblMarketPrice: "Precio Mercado Bobina (€/kg):",
+        lblSpoolCost: "Coste Neto por Bobina Producida:",
+        lblSpoolSavings: "Ahorro Neto Frente a Comercial:",
+        recipesTitle: "📖 Color Book & Biblioteca de Mezclas",
+        lblRecipeName: "Nombre de la Receta:",
+        recipeNamePlaceholder: "Ej: Verde Militar CF Pro",
+        btnSaveRecipe: "💾 Guardar Receta Actual",
+        btnExportJson: "📤 Exportar en JSON",
+        btnImportJson: "📥 Importar desde JSON",
+        btnGenerateLabel: "🏷️ Generar Etiqueta con Código QR",
+        modalLabelHeader: "Etiqueta Técnica de Bobina (M1/R1)",
+        lblPrintWeight: "Peso Neto:",
+        lblPrintM1Temp: "Temp. Extrusión M1:",
+        lblPrintFlowRatio: "Flow Ratio Slicer:",
+        lblPrintFdmTemp: "Impresión 3D:",
+        lblPrintBatch: "Lote de Extrusión:",
+        btnPrintLabel: "🖨️ Imprimir Etiqueta",
+        btnCloseModal: "Cerrar",
+        saturationAlert: "⚠️ <strong>Aviso de saturación:</strong> El desecho de la R1 ya contiene más pigmento del que admite el tono deseado. El color final saldrá más oscuro o apagado. Reduce el % de desecho o usa restos neutros.",
+        scrapCoversColor: "No se requiere pigmento extra (los restos de la R1 aportan el color).",
+        pigments: { cyan: "Cian / Azul", magenta: "Magenta / Rojo", yellow: "Amarillo", black: "Negro de Carbón", white: "Blanco (TiO2)" },
+        wearLevels: {
+          low: "Bajo / Estándar",
+          lowSoft: "Bajo (Carga suave vegetal)",
+          lowPlant: "Bajo (Materia vegetal fina)",
+          medium: "Medio (Riesgo pirolisis)",
+          veryHigh: "Muy Alto (Abrasión Husillo M1)",
+          extreme: "Extremo (Abrasivo Mineral)",
+          lowMica: "Bajo / No abrasivo",
+          lowThermal: "Bajo (Activación térmica)"
+        },
+        bioAlertTitle: "Límite Térmico de Biomasa:",
+        bioAlertDesc: "Mantener la Creality M1 por debajo de {temp}°C para prevenir la carbonización/humo de materia orgánica.",
+        btnTimerStart: "▶ Iniciar Extrusión",
+        btnTimerPause: "⏸ Pausar Extrusión",
+        btnTimerResume: "▶ Reanudar Extrusión",
+        noStoredRecipes: "No hay recetas guardadas en memoria.",
+        materials: {
+          'PLA': 'PLA Estándar (1.24 g/cm³)',
+          'PLA-CF': 'PLA-CF Carbono (1.29 g/cm³)',
+          'PETG': 'PETG Resistente (1.27 g/cm³)',
+          'ABS': 'ABS Técnico (1.05 g/cm³)',
+          'TPU': 'TPU Flexible 95A (1.21 g/cm³)'
+        },
+        scrapPresets: {
+          clear: "Neutro / Natural / Transparente",
+          white: "Blanco Sólido",
+          black: "Negro Carbón",
+          red: "Rojo",
+          blue: "Azul",
+          yellow: "Amarillo",
+          green: "Verde",
+          custom: "Color personalizado de restos..."
+        },
+        targetPresets: {
+          emerald_green: "Verde Esmeralda",
+          primary_red: "Rojo Fuego",
+          primary_blue: "Azul Eléctrico",
+          primary_yellow: "Amarillo Sol",
+          deep_purple: "Púrpura / Violeta",
+          vibrant_orange: "Naranja Vivo",
+          pure_white: "Blanco Nieve",
+          jet_black: "Negro Azabache",
+          custom: "Tono Libre Personalizado..."
+        },
+        additivePresets: {
+          none: "Ninguno (Filamento estándar monomaterial)",
+          coffee: "☕ Café Molido / Posos Deshidratados (Scented Coffee Bio-PLA)",
+          flowers: "🌸 Flores en Polvo / Pétalos Triturados (Lavanda, Rosa, Manzanilla)",
+          cf: "Fibra de Carbono Cortada (Milled CF) (15% en peso)",
+          wood: "Harina de Madera Orgánica (Pino) (20% en peso)",
+          glow: "Polvo Fosforescente / Glow (8% en peso)",
+          glitter: "Purpurina Perlada / Flakes de Mica (2% en peso)",
+          foam: "Agente Espumante Activo / Ligero (3% en peso)"
+        }
+      },
+      en: {
+        appTitle: "⚙️ Creality M1 & R1 Master Studio Pro",
+        appSubtitle: "M1 Extruder (±0.05 mm) • R1 Shredder • CMYKW Chromatic Lab & Exotic Compounds",
+        installApp: "📲 Install App",
+        themeLight: "Light Mode",
+        themeDark: "Dark Mode",
+        tabBlend: "🎨 Blending & Colorimetry",
+        tabSimulator: "📐 Tolerance Simulator",
+        tabExotics: "🧪 Exotic Compounds",
+        tabProduction: "⏱️ Production & Timer",
+        tabRecipes: "📖 Recipe Book & QR Labels",
+        basePolymerTitle: "🧵 Base Polymer & Scrap",
+        lblBasePolymer: "Base Polymer:",
+        lblRecyclePct: "% R1 Shredded Scrap:",
+        lblTargetWeight: "Target Spool Weight (g):",
+        lblPurgeWeight: "M1 Purge & Tuning (g):",
+        scrapColorTitle: "♻️ Shredded Scrap Color (R1)",
+        targetColorTitle: "🎯 Target Spool Color",
+        lblColorLoad: "% Colorant Load (Masterbatch):",
+        spoolVisualizerTitle: "👁️ M1 Visual Spool Simulation",
+        legendFilament: "Extruded Filament",
+        legendAdditive: "Special Additive",
+        legendGauge: "Gauge: 1.75 mm",
+        sumTotalBatch: "Total batch load into hopper:",
+        sumScrapReq: "♻️ R1 shredded scrap required:",
+        sumVirginReq: "⚪ Virgin neutral pellets:",
+        sumColorReq: "🎨 Total extra net masterbatch:",
+        simTitle: "📐 Creality M1 Tolerance Simulator & Flow Calibration",
+        simDesc: "The Creality M1 extruder guarantees <strong>±0.05 mm</strong> with 100% virgin pellets and reaches up to <strong>±0.10 mm</strong> with 100% R1 scrap due to molecular weight dispersion. This engine computes volumetric error and prescribes the exact <strong>Flow Ratio</strong> for your slicer.",
+        lblDiaRange: "Estimated Diameter Range:",
+        lblVolError: "Volumetric Deviation:",
+        lblVolErrorSub: "Expected extrusion variation",
+        lblFlowRatio: "Flow Ratio Multiplier:",
+        lblFlowRatioSub: "For Orca, Bambu or PrusaSlicer",
+        lblMfi: "MFI Fluidity Increase:",
+        lblMfiSub: "Due to R1 thermal degradation",
+        lblSlicerSnippetTitle: "📋 Slicer Configuration Snippet",
+        btnCopySnippet: "📋 Copy Profile",
+        exoticsTitle: "🧪 Exotic Compounds & Reinforcement Lab",
+        exoticsDesc: "The Creality M1 allows compounding mineral fillers, milled fibers, or dehydrated bio-fillers (coffee grounds, floral powder). Select a compound to inspect dosage, thermal ceilings to prevent pyrolysis, and required nozzles.",
+        lblAdditiveType: "Special Additive / Filler:",
+        lblAdditivePct: "Custom Filler Ratio (% wt):",
+        lblAdditiveWeight: "Additive Quantity:",
+        lblNozzleReq: "Required 3D Nozzle:",
+        lblWearReq: "M1 Screw Wear:",
+        prodTitle: "⏱️ M1 Extrusion Planner & Workshop Timer",
+        prodDesc: "Creality M1 output by composition: <strong>1000 g/h</strong> (virgin pellets), <strong>600 g/h</strong> (50% R1 scrap), <strong>500 g/h</strong> (100% R1 shredded).",
+        lblThroughput: "Extrusion Speed:",
+        lblThroughputSub: "Adjusted by % R1 scrap",
+        lblDuration: "Estimated Duration:",
+        lblDurationSub: "Includes initial purge",
+        lblEta: "Estimated Finish Time (ETA):",
+        lblEtaSub: "Local workshop time",
+        lblLiveTimer: "Live Extrusion Timer",
+        btnTimerReset: "↺ Reset",
+        btnTestChime: "🔔 Test Sound Alarm",
+        ecoTitle: "💰 Economic Performance per Spool",
+        lblVirginPrice: "Virgin Pellets (€/kg):",
+        lblMasterPrice: "Colorant Masterbatch (€/100g):",
+        lblMarketPrice: "Retail Spool Price (€/kg):",
+        lblSpoolCost: "Net Cost per Produced Spool:",
+        lblSpoolSavings: "Net Savings vs Retail:",
+        recipesTitle: "📖 Color Book & Formulation Library",
+        lblRecipeName: "Recipe Name:",
+        recipeNamePlaceholder: "e.g. Tactical Olive CF Pro",
+        btnSaveRecipe: "💾 Save Current Recipe",
+        btnExportJson: "📤 Export JSON",
+        btnImportJson: "📥 Import JSON",
+        btnGenerateLabel: "🏷️ Generate QR Spool Label",
+        modalLabelHeader: "Technical Spool Label (M1/R1)",
+        lblPrintWeight: "Net Weight:",
+        lblPrintM1Temp: "M1 Extrusion Temp:",
+        lblPrintFlowRatio: "Slicer Flow Ratio:",
+        lblPrintFdmTemp: "3D Printing:",
+        lblPrintBatch: "Extrusion Batch:",
+        btnPrintLabel: "🖨️ Print Label",
+        btnCloseModal: "Close",
+        saturationAlert: "⚠️ <strong>Saturation Warning:</strong> The R1 shredded scrap already has more pigment than the target color permits. Output will appear darker or muted. Reduce % scrap or use natural scrap.",
+        scrapCoversColor: "No extra masterbatch needed (R1 scrap provides all color).",
+        pigments: { cyan: "Cyan / Blue", magenta: "Magenta / Red", yellow: "Yellow", black: "Carbon Black", white: "White (TiO2)" },
+        wearLevels: {
+          low: "Low / Standard",
+          lowSoft: "Low (Soft organic filler)",
+          lowPlant: "Low (Fine botanical powder)",
+          medium: "Medium (Pyrolysis risk)",
+          veryHigh: "Very High (M1 Screw Abrasion)",
+          extreme: "Extreme (Mineral Abrasive)",
+          lowMica: "Low / Non-abrasive",
+          lowThermal: "Low (Thermal expansion)"
+        },
+        bioAlertTitle: "Biomass Thermal Threshold:",
+        bioAlertDesc: "Keep Creality M1 barrel under {temp}°C to prevent pyrolysis/smoke of organic matter.",
+        btnTimerStart: "▶ Start Extrusion",
+        btnTimerPause: "⏸ Pause Extrusion",
+        btnTimerResume: "▶ Resume Extrusion",
+        noStoredRecipes: "No saved recipes found.",
+        materials: {
+          'PLA': 'PLA Standard (1.24 g/cm³)',
+          'PLA-CF': 'PLA-CF Carbon (1.29 g/cm³)',
+          'PETG': 'PETG Tough (1.27 g/cm³)',
+          'ABS': 'ABS Engineering (1.05 g/cm³)',
+          'TPU': 'TPU Flexible 95A (1.21 g/cm³)'
+        },
+        scrapPresets: {
+          clear: "Neutral / Natural / Clear",
+          white: "Solid White",
+          black: "Carbon Black",
+          red: "Red",
+          blue: "Blue",
+          yellow: "Yellow",
+          green: "Green",
+          custom: "Custom scrap color..."
+        },
+        targetPresets: {
+          emerald_green: "Emerald Green",
+          primary_red: "Fire Red",
+          primary_blue: "Electric Blue",
+          primary_yellow: "Sun Yellow",
+          deep_purple: "Deep Purple / Violet",
+          vibrant_orange: "Vibrant Orange",
+          pure_white: "Snow White",
+          jet_black: "Jet Black",
+          custom: "Custom Free Tone..."
+        },
+        additivePresets: {
+          none: "None (Standard monomaterial filament)",
+          coffee: "☕ Dehydrated Ground Coffee (Scented Bio-PLA)",
+          flowers: "🌸 Powdered Petals (Lavender, Rose, Chamomile)",
+          cf: "Milled Carbon Fiber (15% by weight)",
+          wood: "Organic Pine Wood Flour (20% by weight)",
+          glow: "Phosphorescent Glow Powder (8% by weight)",
+          glitter: "Pearlescent Mica Flakes (2% by weight)",
+          foam: "Active Lightweight Foaming Agent (3% by weight)"
+        }
+      },
+      ca: {
+        appTitle: "⚙️ Creality M1 & R1 Master Studio Pro",
+        appSubtitle: "Extrusora M1 (±0.05 mm) • Trituradora R1 • Laboratori Cromàtic CMYKW & Compostos Exòtics",
+        installApp: "📲 Instal·lar App",
+        themeLight: "Mode Clar",
+        themeDark: "Mode Fosc",
+        tabBlend: "🎨 Barreja & Colorimetria",
+        tabSimulator: "📐 Simulador de Tolerància",
+        tabExotics: "🧪 Compostos Exòtics",
+        tabProduction: "⏱️ Producció & Temporitzador",
+        tabRecipes: "📖 Llibre de Receptes & Etiquetes QR",
+        basePolymerTitle: "🧵 Polímer Base & Residu",
+        lblBasePolymer: "Polímer Base:",
+        lblRecyclePct: "% Residu Triturat R1:",
+        lblTargetWeight: "Pes Objectiu Bobina (g):",
+        lblPurgeWeight: "Purga i Ajust M1 (g):",
+        scrapColorTitle: "♻️ Color del Residu Triturat (R1)",
+        targetColorTitle: "🎯 Color Desitjat de la Bobina",
+        lblColorLoad: "% Concentració Colorant (Masterbatch):",
+        spoolVisualizerTitle: "👁️ Simulació Visual de Bobina M1",
+        legendFilament: "Filament Extruït",
+        legendAdditive: "Càrrega Especial",
+        legendGauge: "Calibre: 1.75 mm",
+        sumTotalBatch: "Total barreja a carregar a la tremuja:",
+        sumScrapReq: "♻️ Residu triturat R1 requerit:",
+        sumVirginReq: "⚪ Pèl·lets verges neutres:",
+        sumColorReq: "🎨 Total Masterbatch net extra:",
+        simTitle: "📐 Simulador de Tolerància Creality M1 & Calibració de Flux",
+        simDesc: "L'extrusora Creality M1 garanteix <strong>±0.05 mm</strong> amb pèl·lets 100% verges i augmenta fins a <strong>±0.10 mm</strong> amb 100% residu R1 per dispersió de pes molecular. Aquest motor calcula la desviació volumètrica i prescriu el <strong>Multiplicador de Flux (Flow Ratio)</strong> exacte.",
+        lblDiaRange: "Rang Estimat de Diàmetre:",
+        lblVolError: "Desviació Volumètrica:",
+        lblVolErrorSub: "Variació d'extrusió esperada",
+        lblFlowRatio: "Multiplicador de Flux (Flow Ratio):",
+        lblFlowRatioSub: "Per a Orca, Bambu o PrusaSlicer",
+        lblMfi: "Augment de Fluïdesa (MFI):",
+        lblMfiSub: "Per degradació tèrmica R1",
+        lblSlicerSnippetTitle: "📋 Snippet de Configuració per a Laminador",
+        btnCopySnippet: "📋 Copiar Perfil",
+        exoticsTitle: "🧪 Laboratori de Compostos Exòtics & Reforç",
+        exoticsDesc: "L'extrusora Creality M1 permet incorporar càrregues minerals, fibres curtes o biomassa orgànica deshidratada (com marro de cafè o pètals en pols). Tria un compost per conèixer dosificació, límits tèrmics i broquets recomanats.",
+        lblAdditiveType: "Càrrega o Additiu Especial:",
+        lblAdditivePct: "% Càrrega Personalitzada (% en pes):",
+        lblAdditiveWeight: "Quantitat d'Additiu:",
+        lblNozzleReq: "Broquet 3D Exigit:",
+        lblWearReq: "Desgast Caragol M1:",
+        prodTitle: "⏱️ Planificador d'Extrusió M1 & Temporitzador de Taller",
+        prodDesc: "Rendiment Creality M1 segons composició: <strong>1000 g/h</strong> (verges), <strong>600 g/h</strong> (50% R1), <strong>500 g/h</strong> (100% R1).",
+        lblThroughput: "Velocitat d'Extrusió:",
+        lblThroughputSub: "Ajustada per % de residu R1",
+        lblDuration: "Durada Estimada:",
+        lblDurationSub: "Inclou purga inicial",
+        lblEta: "Hora d'Acabament (ETA):",
+        lblEtaSub: "Hora local del taller",
+        lblLiveTimer: "Temporitzador en Viu d'Extrusió",
+        btnTimerReset: "↺ Reiniciar",
+        btnTestChime: "🔔 Provar Alarma Acústica",
+        ecoTitle: "💰 Rendiment Econòmic per Bobina",
+        lblVirginPrice: "Pèl·lets Verges (€/kg):",
+        lblMasterPrice: "Colorant Masterbatch (€/100g):",
+        lblMarketPrice: "Preu Mercat Bobina (€/kg):",
+        lblSpoolCost: "Cost Net per Bobina Produïda:",
+        lblSpoolSavings: "Estalvi Net davant Comercial:",
+        recipesTitle: "📖 Llibre de Receptes & Biblioteca de Mescles",
+        lblRecipeName: "Nom de la Recepta:",
+        recipeNamePlaceholder: "Ex: Verd Militar CF Pro",
+        btnSaveRecipe: "💾 Desar Recepta Actual",
+        btnExportJson: "📤 Exportar a JSON",
+        btnImportJson: "📥 Importar des de JSON",
+        btnGenerateLabel: "🏷️ Generar Etiqueta amb Codi QR",
+        modalLabelHeader: "Etiqueta Tècnica de Bobina (M1/R1)",
+        lblPrintWeight: "Pes Net:",
+        lblPrintM1Temp: "Temp. Extrusió M1:",
+        lblPrintFlowRatio: "Flow Ratio Slicer:",
+        lblPrintFdmTemp: "Impressió 3D:",
+        lblPrintBatch: "Lot d'Extrusió:",
+        btnPrintLabel: "🖨️ Imprimir Etiqueta",
+        btnCloseModal: "Tancar",
+        saturationAlert: "⚠️ <strong>Avís de saturació:</strong> El residu triturat de la R1 ja conté més pigment del que permet el color objectiu. Redueix el % de residu o utilitza material neutre.",
+        scrapCoversColor: "No cal masterbatch extra (el residu R1 ja aporta el color).",
+        pigments: { cyan: "Cian / Blau", magenta: "Magenta / Vermell", yellow: "Groc", black: "Negre de Carbó", white: "Blanc (TiO2)" },
+        wearLevels: {
+          low: "Baix / Estàndard",
+          lowSoft: "Baix (Càrrega suau vegetal)",
+          lowPlant: "Baix (Matèria botànica fina)",
+          medium: "Mitjà (Risc de piròlisi)",
+          veryHigh: "Molt Alt (Abrasió Caragol M1)",
+          extreme: "Extrem (Abrasiu Mineral)",
+          lowMica: "Baix / No abrasiu",
+          lowThermal: "Baix (Activació tèrmica)"
+        },
+        bioAlertTitle: "Límit Tèrmic de Biomassa:",
+        bioAlertDesc: "Mantingueu la Creality M1 per sota de {temp}°C per evitar la carbonització de la matèria orgànica.",
+        btnTimerStart: "▶ Iniciar Extrusió",
+        btnTimerPause: "⏸ Pausar Extrusió",
+        btnTimerResume: "▶ Reprendre Extrusió",
+        noStoredRecipes: "No hi ha receptes desades a la memòria.",
+        materials: {
+          'PLA': 'PLA Estàndard (1.24 g/cm³)',
+          'PLA-CF': 'PLA-CF Carboni (1.29 g/cm³)',
+          'PETG': 'PETG Resistent (1.27 g/cm³)',
+          'ABS': 'ABS Tècnic (1.05 g/cm³)',
+          'TPU': 'TPU Flexible 95A (1.21 g/cm³)'
+        },
+        scrapPresets: {
+          clear: "Neutre / Natural / Transparent",
+          white: "Blanc Sòlid",
+          black: "Negre Carbó",
+          red: "Vermell",
+          blue: "Blau",
+          yellow: "Groc",
+          green: "Verd",
+          custom: "Color personalitzat de residus..."
+        },
+        targetPresets: {
+          emerald_green: "Verd Esmeralda",
+          primary_red: "Vermell Foc",
+          primary_blue: "Blau Elèctric",
+          primary_yellow: "Groc Sol",
+          deep_purple: "Porpra / Violeta",
+          vibrant_orange: "Taronja Viu",
+          pure_white: "Blanc Neu",
+          jet_black: "Negre Atzabeja",
+          custom: "To Lliure Personalitzat..."
+        },
+        additivePresets: {
+          none: "Cap (Filament estàndard monomaterial)",
+          coffee: "☕ Marro de Cafè Deshidratat (Scented Bio-PLA)",
+          flowers: "🌸 Pètals en Pols (Lavanda, Rosa, Camamilla)",
+          cf: "Fibra de Carboni Curta (Milled CF) (15% en pes)",
+          wood: "Farina de Fusta Orgànica (Pi) (20% en pes)",
+          glow: "Pols Fosforescent / Glow (8% en pes)",
+          glitter: "Purpurina Perlada / Flakes de Mica (2% en pes)",
+          foam: "Agent Escumant Actiu / Lleuger (3% en pes)"
+        }
+      },
+      fr: {
+        appTitle: "⚙️ Creality M1 & R1 Master Studio Pro",
+        appSubtitle: "Extrudeuse M1 (±0.05 mm) • Broyeur R1 • Laboratoire Chromatique CMYKW & Composés Exotiques",
+        installApp: "📲 Installer l'App",
+        themeLight: "Mode Clair",
+        themeDark: "Mode Sombre",
+        tabBlend: "🎨 Mélange & Colorimétrie",
+        tabSimulator: "📐 Simulateur de Tolérance",
+        tabExotics: "🧪 Composés Exotiques",
+        tabProduction: "⏱️ Production & Minuteur",
+        tabRecipes: "📖 Recettes & Étiquettes QR",
+        basePolymerTitle: "🧵 Polymère de Base & Déchets",
+        lblBasePolymer: "Polymère de Base :",
+        lblRecyclePct: "% Déchets Broyés R1 :",
+        lblTargetWeight: "Poids Cible Bobine (g) :",
+        lblPurgeWeight: "Purge & Calibrage M1 (g) :",
+        scrapColorTitle: "♻️ Couleur des Déchets Broyés (R1)",
+        targetColorTitle: "🎯 Couleur Cible de la Bobine",
+        lblColorLoad: "% Concentration Colorant (Masterbatch) :",
+        spoolVisualizerTitle: "👁️ Simulation Visuelle Bobine M1",
+        legendFilament: "Filament Extrudé",
+        legendAdditive: "Charge Spéciale",
+        legendGauge: "Calibre : 1.75 mm",
+        sumTotalBatch: "Total mélange à charger en trémie :",
+        sumScrapReq: "♻️ Déchets broyés R1 requis :",
+        sumVirginReq: "⚪ Granulés vierges neutres :",
+        sumColorReq: "🎨 Total Masterbatch net requis :",
+        simTitle: "📐 Simulateur de Tolérance Creality M1 & Calibrage de Débit",
+        simDesc: "L'extrudeuse Creality M1 garantit <strong>±0.05 mm</strong> avec 100% de granulés vierges et atteint jusqu'à <strong>±0.10 mm</strong> avec 100% de déchets R1 en raison de la dispersion de masse moléculaire. Ce moteur calcule l'écart volumétrique et prescrit le <strong>Multiplicateur de Débit (Flow Ratio)</strong> exact.",
+        lblDiaRange: "Plage Estimée de Diamètre :",
+        lblVolError: "Déviation Volumétrique :",
+        lblVolErrorSub: "Variation d'extrusion attendue",
+        lblFlowRatio: "Multiplicateur de Débit (Flow Ratio) :",
+        lblFlowRatioSub: "Pour Orca, Bambu ou PrusaSlicer",
+        lblMfi: "Gain de Fluidité (MFI) :",
+        lblMfiSub: "Par dégradation thermique R1",
+        lblSlicerSnippetTitle: "📋 Configuration pour Slicer (JSON)",
+        btnCopySnippet: "📋 Copier Profil",
+        exoticsTitle: "🧪 Laboratoire de Composés Exotiques & Renforts",
+        exoticsDesc: "La Creality M1 permet d'incorporer des charges minérales, fibres coupées ou biomasse organique déshydratée (marc de café, pétales de fleurs en poudre). Sélectionnez un composé pour inspecter dosages, seuils thermiques et buses requises.",
+        lblAdditiveType: "Charge ou Additif Spécial :",
+        lblAdditivePct: "% Charge Personnalisée (% en poids) :",
+        lblAdditiveWeight: "Quantité d'Additif :",
+        lblNozzleReq: "Buse 3D Requise :",
+        lblWearReq: "Usure Vis M1 :",
+        prodTitle: "⏱️ Planificateur d'Extrusion M1 & Minuteur d'Atelier",
+        prodDesc: "Débit Creality M1 selon composition : <strong>1000 g/h</strong> (vierge), <strong>600 g/h</strong> (50% R1), <strong>500 g/h</strong> (100% R1 broyé).",
+        lblThroughput: "Vitesse d'Extrusion :",
+        lblThroughputSub: "Ajustée selon % de déchet R1",
+        lblDuration: "Durée Estimée :",
+        lblDurationSub: "Inclut la purge initiale",
+        lblEta: "Heure de Fin Estimée (ETA) :",
+        lblEtaSub: "Heure locale de l'atelier",
+        lblLiveTimer: "Minuteur d'Extrusion en Direct",
+        btnTimerReset: "↺ Réinitialiser",
+        btnTestChime: "🔔 Tester Alarme Sonore",
+        ecoTitle: "💰 Rendement Économique par Bobine",
+        lblVirginPrice: "Granulés Vierges (€/kg) :",
+        lblMasterPrice: "Colorant Masterbatch (€/100g) :",
+        lblMarketPrice: "Prix Marché Bobine (€/kg) :",
+        lblSpoolCost: "Coût Net par Bobine Produite :",
+        lblSpoolSavings: "Économie Nette vs Commerce :",
+        recipesTitle: "📖 Nuancier & Bibliothèque de Recettes",
+        lblRecipeName: "Nom de la Recette :",
+        recipeNamePlaceholder: "Ex : Vert Militaire CF Pro",
+        btnSaveRecipe: "💾 Enregistrer la Recette",
+        btnExportJson: "📤 Exporter en JSON",
+        btnImportJson: "📥 Importer depuis JSON",
+        btnGenerateLabel: "🏷️ Générer Étiquette avec QR Code",
+        modalLabelHeader: "Étiquette Technique Bobine (M1/R1)",
+        lblPrintWeight: "Poids Net :",
+        lblPrintM1Temp: "Temp. Extrusion M1 :",
+        lblPrintFlowRatio: "Flow Ratio Slicer :",
+        lblPrintFdmTemp: "Impression 3D :",
+        lblPrintBatch: "Lot d'Extrusion :",
+        btnPrintLabel: "🖨️ Imprimer l'Étiquette",
+        btnCloseModal: "Fermer",
+        saturationAlert: "⚠️ <strong>Alerte de saturation :</strong> Les déchets broyés R1 contiennent déjà plus de pigment que la teinte cible ne le permet. Le fil sortira plus sombre. Réduisez le % de déchets ou utilisez des résidus neutres.",
+        scrapCoversColor: "Aucun masterbatch additionnel requis (les déchets R1 fournissent toute la couleur).",
+        pigments: { cyan: "Cyan / Bleu", magenta: "Magenta / Rouge", yellow: "Jaune", black: "Noir de Carbone", white: "Blanc (TiO2)" },
+        wearLevels: {
+          low: "Faible / Standard",
+          lowSoft: "Faible (Charge végétale douce)",
+          lowPlant: "Faible (Poudre botanique fine)",
+          medium: "Moyen (Risque de pyrolyse)",
+          veryHigh: "Très Élevé (Abrasion Vis M1)",
+          extreme: "Extrême (Abrasif Minéral)",
+          lowMica: "Faible / Non abrasif",
+          lowThermal: "Faible (Activation thermique)"
+        },
+        bioAlertTitle: "Seuil Thermique Biomasse :",
+        bioAlertDesc: "Maintenir la Creality M1 sous {temp}°C pour prévenir la pyrolyse/fumée de matière organique.",
+        btnTimerStart: "▶ Démarrer l'Extrusion",
+        btnTimerPause: "⏸ Suspendre l'Extrusion",
+        btnTimerResume: "▶ Reprendre l'Extrusion",
+        noStoredRecipes: "Aucune recette enregistrée en mémoire.",
+        materials: {
+          'PLA': 'PLA Standard (1.24 g/cm³)',
+          'PLA-CF': 'PLA-CF Carbone (1.29 g/cm³)',
+          'PETG': 'PETG Résistant (1.27 g/cm³)',
+          'ABS': 'ABS Technique (1.05 g/cm³)',
+          'TPU': 'TPU Flexible 95A (1.21 g/cm³)'
+        },
+        scrapPresets: {
+          clear: "Neutre / Naturel / Transparent",
+          white: "Blanc Solide",
+          black: "Noir Carbone",
+          red: "Rouge",
+          blue: "Bleu",
+          yellow: "Jaune",
+          green: "Vert",
+          custom: "Couleur personnalisée de déchets..."
+        },
+        targetPresets: {
+          emerald_green: "Vert Émeraude",
+          primary_red: "Rouge Vif",
+          primary_blue: "Bleu Électrique",
+          primary_yellow: "Jaune Soleil",
+          deep_purple: "Pourpre / Violet",
+          vibrant_orange: "Orange Vif",
+          pure_white: "Blanc Neige",
+          jet_black: "Noir Jais",
+          custom: "Teinte Libre Personnalisée..."
+        },
+        additivePresets: {
+          none: "Aucun (Filament standard monomatériau)",
+          coffee: "☕ Marc de Café Déshydraté (Bio-PLA Aromatisé)",
+          flowers: "🌸 Pétales en Poudre (Lavande, Rose, Camomille)",
+          cf: "Fibres de Carbone Coupées (Milled CF) (15% en poids)",
+          wood: "Farine de Bois Organique (Pin) (20% en poids)",
+          glow: "Poudre Phosphorescente / Glow (8% en poids)",
+          glitter: "Paillettes Nacrées / Flocons de Mica (2% en poids)",
+          foam: "Agent Moussant Actif / Léger (3% en poids)"
+        }
+      },
+      de: {
+        appTitle: "⚙️ Creality M1 & R1 Master Studio Pro",
+        appSubtitle: "M1-Extruder (±0.05 mm) • R1-Schredder • CMYKW-Farblabor & Exotische Verbundstoffe",
+        installApp: "📲 App Installieren",
+        themeLight: "Heller Modus",
+        themeDark: "Dunkler Modus",
+        tabBlend: "🎨 Mischung & Kolorimetrie",
+        tabSimulator: "📐 Toleranz-Simulator",
+        tabExotics: "🧪 Exotische Verbundstoffe",
+        tabProduction: "⏱️ Produktion & Timer",
+        tabRecipes: "📖 Rezeptbuch & QR-Etiketten",
+        basePolymerTitle: "🧵 Basispolymer & Ausschuss",
+        lblBasePolymer: "Basispolymer:",
+        lblRecyclePct: "% R1-Schredderabfall:",
+        lblTargetWeight: "Zielgewicht Spule (g):",
+        lblPurgeWeight: "M1 Spülung & Justierung (g):",
+        scrapColorTitle: "♻️ Farbe des Schredderguts (R1)",
+        targetColorTitle: "🎯 Zielfarbe der Spule",
+        lblColorLoad: "% Farbstoffanteil (Masterbatch):",
+        spoolVisualizerTitle: "👁️ Visuelle M1-Spulensimulation",
+        legendFilament: "Extrudiertes Filament",
+        legendAdditive: "Sonderzusatz",
+        legendGauge: "Kaliber: 1.75 mm",
+        sumTotalBatch: "Gesamtmischung für den Trichter:",
+        sumScrapReq: "♻️ Benötigter R1-Schredderabfall:",
+        sumVirginReq: "⚪ Neutrale Neugranulate:",
+        sumColorReq: "🎨 Benötigtes Netto-Masterbatch:",
+        simTitle: "📐 Creality M1 Toleranzsimulator & Flusskalibrierung",
+        simDesc: "Der Creality M1 Extruder garantiert <strong>±0.05 mm</strong> bei 100% Neugranulat und erreicht bis zu <strong>±0.10 mm</strong> bei 100% R1-Abfall durch Molekulargewichtsstreuung. Dieses System berechnet die volumetrische Abweichung und ermittelt die exakte <strong>Flussrate (Flow Ratio)</strong> für Ihren Slicer.",
+        lblDiaRange: "Geschätzter Durchmesserbereich:",
+        lblVolError: "Volumetrische Abweichung:",
+        lblVolErrorSub: "Erwartete Extrusionsschwankung",
+        lblFlowRatio: "Flussraten-Multiplikator (Flow Ratio):",
+        lblFlowRatioSub: "Für Orca, Bambu oder PrusaSlicer",
+        lblMfi: "MFI-Fließfähigkeitssteigerung:",
+        lblMfiSub: "Durch R1 thermische Zersetzung",
+        lblSlicerSnippetTitle: "📋 Slicer-Konfigurationscode (JSON)",
+        btnCopySnippet: "📋 Profil Kopieren",
+        exoticsTitle: "🧪 Labor für Exotische Verbundstoffe & Verstärkungen",
+        exoticsDesc: "Die Creality M1 ermöglicht die Einarbeitung von mineralischen Füllstoffen, gemahlenen Fasern oder dehydrierter Biomasse (Kaffeesatz, Blütenpulver). Wählen Sie einen Zusatz, um Dosierung, Hitzegrenzen und Düsenanforderungen zu prüfen.",
+        lblAdditiveType: "Zusatzstoff / Spezialfüllstoff:",
+        lblAdditivePct: "% Benutzerdefinierter Füllstoff (% Gew.):",
+        lblAdditiveWeight: "Zusatzstoffmenge:",
+        lblNozzleReq: "Erforderliche 3D-Düse:",
+        lblWearReq: "M1 Schneckenverschleiß:",
+        prodTitle: "⏱️ M1 Extrusionsplaner & Werkstatt-Timer",
+        prodDesc: "Creality M1 Durchsatz nach Zusammensetzung: <strong>1000 g/h</strong> (Neumaterial), <strong>600 g/h</strong> (50% R1), <strong>500 g/h</strong> (100% R1 geschreddert).",
+        lblThroughput: "Extrusionsgeschwindigkeit:",
+        lblThroughputSub: "Angepasst an % R1-Abfall",
+        lblDuration: "Geschätzte Dauer:",
+        lblDurationSub: "Inklusive anfänglicher Spülung",
+        lblEta: "Voraussichtliche Fertigstellung (ETA):",
+        lblEtaSub: "Lokale Werkstattzeit",
+        lblLiveTimer: "Live-Extrusionstimer",
+        btnTimerReset: "↺ Zurücksetzen",
+        btnTestChime: "🔔 Signalton Testen",
+        ecoTitle: "💰 Wirtschaftlichkeit pro Spule",
+        lblVirginPrice: "Neugranulat (€/kg):",
+        lblMasterPrice: "Farbstoff-Masterbatch (€/100g):",
+        lblMarketPrice: "Marktpreis Spule (€/kg):",
+        lblSpoolCost: "Nettokosten pro hergestellter Spule:",
+        lblSpoolSavings: "Nettoersparnis vs. Handel:",
+        recipesTitle: "📖 Farbtonbuch & Rezepturbibliothek",
+        lblRecipeName: "Rezeptname:",
+        recipeNamePlaceholder: "z.B. Olivgrün CF Pro",
+        btnSaveRecipe: "💾 Rezept Speichern",
+        btnExportJson: "📤 Als JSON Exportieren",
+        btnImportJson: "📥 Aus JSON Importieren",
+        btnGenerateLabel: "🏷️ QR-Etikett Generieren",
+        modalLabelHeader: "Technisches Spulenetikett (M1/R1)",
+        lblPrintWeight: "Nettogewicht:",
+        lblPrintM1Temp: "M1 Extrusionstemp.:" ,
+        lblPrintFlowRatio: "Slicer Flow Ratio:",
+        lblPrintFdmTemp: "3D-Druck:",
+        lblPrintBatch: "Extrusionscharge:",
+        btnPrintLabel: "🖨️ Etikett Drucken",
+        btnCloseModal: "Schließen",
+        saturationAlert: "⚠️ <strong>Sättigungswarnung:</strong> Der R1-Schredderabfall enthält bereits mehr Pigmente als die Zielfarbe zulässt. Das Ergebnis wird dunkler ausfallen. Reduzieren Sie den Abfallanteil oder verwenden Sie neutrales Material.",
+        scrapCoversColor: "Kein zusätzliches Masterbatch erforderlich (R1-Abfall liefert die gesamte Farbe).",
+        pigments: { cyan: "Cyan / Blau", magenta: "Magenta / Rot", yellow: "Gelb", black: "Rußschwarz", white: "Weiß (TiO2)" },
+        wearLevels: {
+          low: "Niedrig / Standard",
+          lowSoft: "Niedrig (Weiche pflanzliche Füllung)",
+          lowPlant: "Niedrig (Feines botanisches Pulver)",
+          medium: "Mittel (Pyrolyserisiko)",
+          veryHigh: "Sehr Hoch (M1 Schneckenabrieb)",
+          extreme: "Extrem (Mineralischer Abrasivstoff)",
+          lowMica: "Niedrig / Nicht abrasiv",
+          lowThermal: "Niedrig (Thermische Expansion)"
+        },
+        bioAlertTitle: "Biomasse-Hitzegrenze:",
+        bioAlertDesc: "Creality M1 Zylinder unter {temp}°C halten, um Pyrolyse/Rauch organischer Stoffe zu verhindern.",
+        btnTimerStart: "▶ Extrusion Starten",
+        btnTimerPause: "⏸ Extrusion Pausieren",
+        btnTimerResume: "▶ Extrusion Fortsetzen",
+        noStoredRecipes: "Keine gespeicherten Rezepte vorhanden.",
+        materials: {
+          'PLA': 'PLA Standard (1.24 g/cm³)',
+          'PLA-CF': 'PLA-CF Carbon (1.29 g/cm³)',
+          'PETG': 'PETG Zäh (1.27 g/cm³)',
+          'ABS': 'ABS Technik (1.05 g/cm³)',
+          'TPU': 'TPU Flexibel 95A (1.21 g/cm³)'
+        },
+        scrapPresets: {
+          clear: "Neutral / Natürlich / Klar",
+          white: "Solid Weiß",
+          black: "Rußschwarz",
+          red: "Rot",
+          blue: "Blau",
+          yellow: "Gelb",
+          green: "Grün",
+          custom: "Benutzerdefinierte Abfallfarbe..."
+        },
+        targetPresets: {
+          emerald_green: "Smaragdgrün",
+          primary_red: "Feuerrot",
+          primary_blue: "Elektroblau",
+          primary_yellow: "Sonnengelb",
+          deep_purple: "Tiefviolett / Lila",
+          vibrant_orange: "Leuchtend Orange",
+          pure_white: "Schneeweiß",
+          jet_black: "Tiefschwarz",
+          custom: "Freier Benutzerdefinierter Farbton..."
+        },
+        additivePresets: {
+          none: "Keiner (Standard Monomaterial-Filament)",
+          coffee: "☕ Dehydrierter Kaffeesatz (Aroma Bio-PLA)",
+          flowers: "🌸 Blütenpulver (Lavendel, Rose, Kamille)",
+          cf: "Kurzgeschnittene Carbonfaser (Milled CF) (15% Gew.)",
+          wood: "Organisches Kiefernholzmehl (20% Gew.)",
+          glow: "Phosphoreszierendes Leuchtpulver / Glow (8% Gew.)",
+          glitter: "Perlmutt-Glitzer / Glimmerflocken (2% Gew.)",
+          foam: "Aktives Leichtbau-Treibmittel (3% Gew.)"
+        }
+      }
+    };
+
+    const MATERIALS = {
+      'PLA':    { name: 'PLA Estándar', baseM1Temp: 205, speed: 1.8, density: 1.24, dry: '50°C / 4 horas', nozzle: '205-215 °C', bed: '50-60 °C' },
+      'PLA-CF': { name: 'PLA-CF Carbono', baseM1Temp: 215, speed: 1.5, density: 1.29, dry: '55°C / 6 horas', nozzle: '215-225 °C', bed: '55-65 °C' },
+      'PETG':   { name: 'PETG Resistente', baseM1Temp: 235, speed: 1.6, density: 1.27, dry: '65°C / 5 horas', nozzle: '235-245 °C', bed: '70-80 °C' },
+      'ABS':    { name: 'ABS Técnico', baseM1Temp: 245, speed: 1.7, density: 1.05, dry: '75°C / 4 horas', nozzle: '240-255 °C', bed: '95-105 °C' },
+      'TPU':    { name: 'TPU Flexible 95A', baseM1Temp: 215, speed: 1.1, density: 1.21, dry: '60°C / 5 horas', nozzle: '220-230 °C', bed: '40-50 °C' }
+    };
+
+    const PRESETS = {
+      clear:          { r: 240, g: 240, b: 240, isClear: true },
+      white:          { r: 255, g: 255, b: 255 },
+      black:          { r: 15,  g: 15,  b: 15  },
+      red:            { r: 230, g: 25,  b: 25  },
+      blue:           { r: 20,  g: 60,  b: 230 },
+      yellow:         { r: 250, g: 220, b: 10  },
+      green:          { r: 20,  g: 180, b: 75  },
+      primary_red:    { r: 230, g: 25,  b: 25  },
+      primary_blue:   { r: 20,  g: 60,  b: 230 },
+      primary_yellow: { r: 250, g: 220, b: 10  },
+      emerald_green:  { r: 20,  g: 180, b: 75  },
+      deep_purple:    { r: 130, g: 20,  b: 180 },
+      vibrant_orange: { r: 245, g: 120, b: 15  },
+      pure_white:     { r: 255, g: 255, b: 255 },
+      jet_black:      { r: 15,  g: 15,  b: 15  }
+    };
+
+    const ADITIVOS = {
+      none:   { 
+        name: 'Sin Aditivo Especial', 
+        nozzle: 'Latón / Cobre ≥ 0.4 mm', 
+        wear: 'Bajo / Estándar', 
+        tip: 'Extrusión convencional sin agentes abrasivos ni biomasa orgánica.', 
+        defaultPct: 0,
+        isBio: false,
+        maxTempM1: 260
+      },
+      coffee: { 
+        name: '☕ Café Molido Deshidratado (Coffee Bio-Composite)', 
+        nozzle: 'Latón / Cobre ≥ 0.5 mm - 0.6 mm', 
+        wear: 'Bajo (Carga suave no mineral)', 
+        tip: 'Posos de café 100% deshidratados en horno a 80°C (<1% de humedad) y tamizados a <150 micras. Desprende aroma a café tostado durante la extrusión y la impresión 3D, aportando un acabado terroso mate moteado.', 
+        defaultPct: 5,
+        isBio: true,
+        maxTempM1: 195,
+        particleColor: '#3a2012',
+        autoColor: '#6f4e37'
+      },
+      flowers:{ 
+        name: '🌸 Flores en Polvo / Pétalos Tamizados (Bio-Floral)', 
+        nozzle: 'Latón / Cobre ≥ 0.5 mm', 
+        wear: 'Bajo (Materia vegetal fina)', 
+        tip: 'Pétalos secos de lavanda, rosa o manzanilla triturados en molinillo y pasados por tamiz de 120 micras. Aporta un tenue aroma botánico a la pieza y motas florales de textura pastel única.', 
+        defaultPct: 4,
+        isBio: true,
+        maxTempM1: 190,
+        particleColor: '#c77dff',
+        autoColor: '#d8b4e2'
+      },
+      cf:     { 
+        name: 'Fibra de Carbono Cortada (Milled CF)', 
+        nozzle: 'Acero Endurecido ≥ 0.6 mm (Obligatorio)', 
+        wear: 'Muy Alto (Abrasión Husillo M1)', 
+        tip: 'Las microfibras de carbono aumentan la rigidez pero desgastan rápidamente el barril de la M1. Utilizar siempre boquilla de acero endurecido en la impresora 3D para evitar atascos.', 
+        defaultPct: 15,
+        isBio: false,
+        maxTempM1: 260
+      },
+      wood:   { 
+        name: 'Harina de Madera Orgánica (Pino)', 
+        nozzle: 'Latón / Endurecido ≥ 0.6 mm', 
+        wear: 'Medio (Riesgo de Carbonización)', 
+        tip: 'Secar a 70°C antes de verter a la tolva. Mantener el barril de la M1 por debajo de 200°C para evitar la pirólisis de la celulosa vegetal.', 
+        defaultPct: 20,
+        isBio: true,
+        maxTempM1: 200
+      },
+      glow:   { 
+        name: 'Polvo Fosforescente de Estroncio', 
+        nozzle: 'Acero Endurecido / Rubí ≥ 0.5 mm', 
+        wear: 'Extremo (Abrasivo Mineral)', 
+        tip: 'Los microcristales de aluminato de estroncio son muy abrasivos. Se recomienda purgar la M1 con 200 g de virgen neutro al terminar la tirada.', 
+        defaultPct: 8,
+        isBio: false,
+        maxTempM1: 260
+      },
+      glitter:{ 
+        name: 'Purpurina Perlada / Flakes de Mica', 
+        nozzle: 'Latón Estándar ≥ 0.4 mm', 
+        wear: 'Bajo / No abrasivo', 
+        tip: 'Partículas de mica sintética. No dañan el husillo y proporcionan un brillo sedoso que disimula las capas de impresión.', 
+        defaultPct: 2,
+        isBio: false,
+        maxTempM1: 260
+      },
+      foam:   { 
+        name: 'Agente Espumante Activo', 
+        nozzle: 'Latón Estándar 0.4 mm', 
+        wear: 'Bajo (Activación térmica)', 
+        tip: 'El gas se expande tras salir de la boquilla de la M1, reduciendo el peso de la bobina hasta un 35% por metro cúbico sin perder volumen.', 
+        defaultPct: 3,
+        isBio: false,
+        maxTempM1: 260
+      }
+    };
+
+    let timerInterval = null;
+    let timerRemainingSecs = 0;
+    let timerTotalSecs = 0;
+    let audioCtx = null;
+
+    /* Motor de Temas Claro / Oscuro */
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀️' : '🌙';
+      const dict = I18N[currentLang] || I18N['es'];
+      document.getElementById('themeLabel').textContent = theme === 'dark' ? dict.themeLight : dict.themeDark;
+      try { localStorage.setItem('m1_pro_theme', theme); } catch(e){}
+      renderSpoolCanvas();
+    }
+
+    function updateDOMTranslations() {
+      const dict = I18N[currentLang] || I18N['es'];
+
+      // Traducir todos los elementos con atributo data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      // Placeholders
+      const recipeInput = document.getElementById('recipeName');
+      if (recipeInput && dict.recipeNamePlaceholder) {
+        recipeInput.placeholder = dict.recipeNamePlaceholder;
+      }
+
+      // Traducir opciones de desplegables dinámicamente preservando la selección activa
+      const matSelect = document.getElementById('materialSelect');
+      if (matSelect && dict.materials) {
+        Array.from(matSelect.options).forEach(opt => {
+          if (dict.materials[opt.value]) opt.text = dict.materials[opt.value];
+        });
+      }
+
+      const scrapSelect = document.getElementById('scrapPreset');
+      if (scrapSelect && dict.scrapPresets) {
+        Array.from(scrapSelect.options).forEach(opt => {
+          if (dict.scrapPresets[opt.value]) opt.text = dict.scrapPresets[opt.value];
+        });
+      }
+
+      const targetSelect = document.getElementById('targetPreset');
+      if (targetSelect && dict.targetPresets) {
+        Array.from(targetSelect.options).forEach(opt => {
+          if (dict.targetPresets[opt.value]) opt.text = dict.targetPresets[opt.value];
+        });
+      }
+
+      const addSelect = document.getElementById('additiveType');
+      if (addSelect && dict.additivePresets) {
+        Array.from(addSelect.options).forEach(opt => {
+          if (dict.additivePresets[opt.value]) opt.text = dict.additivePresets[opt.value];
+        });
+      }
+
+      // Actualizar botón del temporizador según estado
+      const timerBtn = document.getElementById('timerStartBtn');
+      if (timerBtn) {
+        if (!timerInterval) {
+          timerBtn.innerText = timerRemainingSecs < timerTotalSecs && timerRemainingSecs > 0 ? dict.btnTimerResume : dict.btnTimerStart;
+        } else {
+          timerBtn.innerText = dict.btnTimerPause;
+        }
+      }
+    }
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      const el = document.getElementById('langSelect');
+      if (el) el.value = lang;
+      try { localStorage.setItem('m1_pro_lang', lang); } catch(e){}
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      applyTheme(currentTheme);
+      updateDOMTranslations();
+      calcAll();
+      renderRecipes();
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+
+    function scrollTabs(delta) {
+      const container = document.getElementById('navTabsContainer');
+      if (container) {
+        container.scrollBy({ left: delta, behavior: 'smooth' });
+      }
+    }
+
+    function switchTab(tabId, evt) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      
+      const targetBtn = evt ? evt.currentTarget : document.querySelector(`.tab-btn[onclick*="${tabId}"]`);
+      if (targetBtn) {
+        targetBtn.classList.add('active');
+        targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+      }
+      if (tabId === 'tab-blend') renderSpoolCanvas();
+    }
+
+    /* Generador de Sonido Acústico (Web Audio API) */
+    function playChime(freq = 880, duration = 0.25, count = 2) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+          }, i * 320);
+        }
+      } catch (e) {}
+    }
+
+    function testAlarmChime() {
+      playChime(784, 0.22, 3);
+    }
+
+    /* Conversión y Síntesis de Colores */
+    function hexToRgb(hex) {
+      const val = parseInt(hex.replace('#', ''), 16);
+      return { r: (val >> 16) & 255, g: (val >> 8) & 255, b: val & 255 };
+    }
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(x => Math.min(255, Math.max(0, Math.round(x))).toString(16).padStart(2, '0')).join('');
+    }
+
+    function rgbToCMYKW(rgb) {
+      const r = rgb.r / 255, g = rgb.g / 255, b = rgb.b / 255;
+      const k = 1 - Math.max(r, g, b);
+      const c = (1 - r - k) / (1 - k || 1);
+      const m = (1 - g - k) / (1 - k || 1);
+      const y = (1 - b - k) / (1 - k || 1);
+      const w = Math.min(r, g, b) * 0.85;
+      return { c, m, y, k, w };
+    }
+
+    function onAdditiveChange() {
+      const addKey = document.getElementById('additiveType').value;
+      const addSpec = ADITIVOS[addKey];
+      const addPctInput = document.getElementById('additivePct');
+      addPctInput.value = addSpec.defaultPct;
+      addPctInput.dataset.changed = 'false';
+
+      // Sugerir tono base compatible cuando se eligen aditivos orgánicos con tinte natural
+      if (addKey === 'coffee') {
+        document.getElementById('targetPicker').value = addSpec.autoColor;
+        document.getElementById('targetPreset').value = 'custom';
+      } else if (addKey === 'flowers') {
+        document.getElementById('targetPicker').value = addSpec.autoColor;
+        document.getElementById('targetPreset').value = 'custom';
+      }
+      calcAll();
+    }
+
+    function applyScrapPreset() {
+      const val = document.getElementById('scrapPreset').value;
+      const container = document.getElementById('scrapPickerContainer');
+      if (!container) return;
+      if (val === 'custom') {
+        container.style.display = 'block';
+      } else {
+        container.style.display = 'none';
+        if (PRESETS[val]) {
+          const hex = rgbToHex(PRESETS[val].r, PRESETS[val].g, PRESETS[val].b);
+          document.getElementById('scrapPicker').value = hex;
+        }
+      }
+      calcAll();
+    }
+
+    function manualScrapPick() { calcAll(); }
+
+    function applyTargetPreset() {
+      const val = document.getElementById('targetPreset').value;
+      if (val !== 'custom' && PRESETS[val]) {
+        const hex = rgbToHex(PRESETS[val].r, PRESETS[val].g, PRESETS[val].b);
+        document.getElementById('targetPicker').value = hex;
+      }
+      calcAll();
+    }
+
+    function manualTargetPick() {
+      document.getElementById('targetPreset').value = 'custom';
+      calcAll();
+    }
+
+    function calcAll() {
+      const matKey = document.getElementById('materialSelect').value;
+      const mat = MATERIALS[matKey] || MATERIALS['PLA'];
+
+      const targetWeight = parseFloat(document.getElementById('targetWeight').value) || 0;
+      const purgeWeight = parseFloat(document.getElementById('purgeWeight').value) || 0;
+      const recyclePct = Math.min(100, Math.max(0, parseFloat(document.getElementById('recyclePct').value) || 0));
+      const colorLoadPct = (parseFloat(document.getElementById('colorLoad').value) || 0) / 100;
+
+      // Aditivos
+      const addKey = document.getElementById('additiveType').value;
+      const addSpec = ADITIVOS[addKey];
+      const addPctInput = document.getElementById('additivePct');
+      if (addKey !== 'none' && addPctInput.dataset.changed !== 'true') {
+        addPctInput.value = addSpec.defaultPct;
+      }
+      const addPct = addKey === 'none' ? 0 : (parseFloat(addPctInput.value) || 0);
+
+      // Masas totales
+      const totalBatch = targetWeight + purgeWeight;
+      const additiveWeight = totalBatch * (addPct / 100);
+      const polymerNet = totalBatch - additiveWeight;
+      const scrapWeight = polymerNet * (recyclePct / 100);
+      const virginWeight = polymerNet * (1 - (recyclePct / 100));
+
+      document.getElementById('totalPrepDisp').innerText = `${totalBatch.toFixed(1)} g`;
+      document.getElementById('scrapDisp').innerText = `${scrapWeight.toFixed(1)} g`;
+      document.getElementById('virginDisp').innerText = `${virginWeight.toFixed(1)} g`;
+
+      const targetRgb = hexToRgb(document.getElementById('targetPicker').value);
+      const targetComp = rgbToCMYKW(targetRgb);
+      const totalPigmentNeeded = polymerNet * colorLoadPct;
+
+      const targetG = {
+        c: targetComp.c * totalPigmentNeeded,
+        m: targetComp.m * totalPigmentNeeded,
+        y: targetComp.y * totalPigmentNeeded,
+        k: targetComp.k * totalPigmentNeeded,
+        w: targetComp.w * totalPigmentNeeded
+      };
+
+      const scrapMode = document.getElementById('scrapPreset').value;
+      let scrapSuppliedG = { c: 0, m: 0, y: 0, k: 0, w: 0 };
+      if (scrapMode !== 'clear' && scrapWeight > 0) {
+        const scrapRgb = hexToRgb(document.getElementById('scrapPicker').value);
+        const scrapComp = rgbToCMYKW(scrapRgb);
+        const scrapPigmentTotal = scrapWeight * colorLoadPct;
+        scrapSuppliedG.c = scrapComp.c * scrapPigmentTotal;
+        scrapSuppliedG.m = scrapComp.m * scrapPigmentTotal;
+        scrapSuppliedG.y = scrapComp.y * scrapPigmentTotal;
+        scrapSuppliedG.k = scrapComp.k * scrapPigmentTotal;
+        scrapSuppliedG.w = scrapComp.w * scrapPigmentTotal;
+      }
+
+      const netAdd = {
+        c: Math.max(0, targetG.c - scrapSuppliedG.c),
+        m: Math.max(0, targetG.m - scrapSuppliedG.m),
+        y: Math.max(0, targetG.y - scrapSuppliedG.y),
+        k: Math.max(0, targetG.k - scrapSuppliedG.k),
+        w: Math.max(0, targetG.w - scrapSuppliedG.w)
+      };
+
+      const dict = I18N[currentLang] || I18N['es'];
+      const alertBox = document.getElementById('alertBox');
+      let excess = false;
+      ['c', 'm', 'y', 'k', 'w'].forEach(k => {
+        if (scrapSuppliedG[k] > targetG[k] + 0.6) excess = true;
+      });
+      if (excess && scrapMode !== 'clear') {
+        alertBox.style.display = 'block';
+        alertBox.innerHTML = dict.saturationAlert;
+      } else {
+        alertBox.style.display = 'none';
+      }
+
+      const totalColorG = netAdd.c + netAdd.m + netAdd.y + netAdd.k + netAdd.w;
+      document.getElementById('colorTotalDisp').innerText = `${totalColorG.toFixed(2)} g`;
+
+      const pigments = [
+        { name: dict.pigments.cyan, hex: "#00a2ff", val: netAdd.c },
+        { name: dict.pigments.magenta, hex: "#e60067", val: netAdd.m },
+        { name: dict.pigments.yellow, hex: "#ffd700", val: netAdd.y },
+        { name: dict.pigments.black, hex: "#151515", val: netAdd.k },
+        { name: dict.pigments.white, hex: "#ffffff", val: netAdd.w }
+      ];
+
+      const pContainer = document.getElementById('pigmentBreakdown');
+      pContainer.innerHTML = '';
+      if (totalColorG <= 0.05) {
+        pContainer.innerHTML = `<span style="color:var(--text-muted); font-size:0.8rem;">${dict.scrapCoversColor}</span>`;
+      } else {
+        pigments.forEach(p => {
+          if (p.val > 0.03) {
+            pContainer.innerHTML += `
+              <div class="summary-row" style="padding:3px 0; font-size:0.82rem;">
+                <span><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:${p.hex}; border:1px solid #777; margin-right:6px;"></span>${p.name}</span>
+                <strong class="val-highlight">${p.val.toFixed(2)} g</strong>
+              </div>
+            `;
+          }
+        });
+      }
+
+      // Información de Compuestos Exóticos
+      let localizedWear = addSpec.wear;
+      if (addKey === 'none') localizedWear = dict.wearLevels.low;
+      else if (addKey === 'coffee') localizedWear = dict.wearLevels.lowSoft;
+      else if (addKey === 'flowers') localizedWear = dict.wearLevels.lowPlant;
+      else if (addKey === 'wood') localizedWear = dict.wearLevels.medium;
+      else if (addKey === 'cf') localizedWear = dict.wearLevels.veryHigh;
+      else if (addKey === 'glow') localizedWear = dict.wearLevels.extreme;
+      else if (addKey === 'glitter') localizedWear = dict.wearLevels.lowMica;
+      else if (addKey === 'foam') localizedWear = dict.wearLevels.lowThermal;
+
+      document.getElementById('additiveNameTitle').innerText = addSpec.name;
+      document.getElementById('additiveWeightDisp').innerText = `${additiveWeight.toFixed(1)} g`;
+      document.getElementById('nozzleReqDisp').innerText = addSpec.nozzle;
+      document.getElementById('wearDisp').innerText = localizedWear;
+      document.getElementById('additiveTip').innerText = addSpec.tip;
+
+      // Tolerancia Mecánica y Calibrador de Flujo
+      const tolerance = 0.05 + (0.05 * (recyclePct / 100));
+      const minDia = (1.75 - tolerance).toFixed(2);
+      const maxDia = (1.75 + tolerance).toFixed(2);
+      document.getElementById('toleranceDisp').innerText = `±${tolerance.toFixed(3)} mm`;
+      document.getElementById('diaRangeDisp').innerText = `${minDia} mm - ${maxDia} mm`;
+
+      const maxDevRatio = (Math.pow(1.75 + tolerance, 2) / Math.pow(1.75, 2) - 1) * 100;
+      const minDevRatio = (Math.pow(1.75 - tolerance, 2) / Math.pow(1.75, 2) - 1) * 100;
+      document.getElementById('volErrorDisp').innerText = `±${maxDevRatio.toFixed(1)}%`;
+
+      const minFlow = (1 / (1 + (maxDevRatio / 100))).toFixed(2);
+      const maxFlow = (1 / (1 + (minDevRatio / 100))).toFixed(2);
+      const avgFlow = (((parseFloat(minFlow) + parseFloat(maxFlow)) / 2) * (1 - (recyclePct / 500))).toFixed(2);
+      document.getElementById('flowRatioDisp').innerText = `${avgFlow} (${minFlow} - ${maxFlow})`;
+
+      const mfiGain = Math.round((recyclePct / 100) * 28);
+      const mfiUnit = currentLang === 'en' ? 'flow' : (currentLang === 'fr' ? 'fluidité' : (currentLang === 'de' ? 'Fließfähigkeit' : 'fluidez'));
+      document.getElementById('mfiDisp').innerText = `+${mfiGain}% ${mfiUnit}`;
+
+      const tBar = document.getElementById('toleranceBar');
+      tBar.style.width = `${Math.min(100, Math.max(10, (tolerance / 0.10) * 100))}%`;
+
+      // Alertas y Restricciones Térmicas para Aditivos Bio-Orgánicos (Café / Flores / Madera)
+      const bioAlert = document.getElementById('bioThermalAlert');
+      if (addSpec.isBio && addPct > 0) {
+        bioAlert.style.display = 'block';
+        bioAlert.innerHTML = `⚠️ <strong>${dict.bioAlertTitle}</strong> ${dict.bioAlertDesc.replace(/\{temp\}/g, addSpec.maxTempM1)}`;
+      } else {
+        bioAlert.style.display = 'none';
+      }
+
+      // Snippet para Laminadores (OrcaSlicer / Bambu Studio / Prusa)
+      const printTempRec = addSpec.isBio ? Math.min(195, parseInt(mat.nozzle.split('-')[0])) : parseInt(mat.nozzle.split('-')[0]);
+      const slicerJson = {
+        "filament_name": `Creality M1 ${addSpec.isBio ? 'Bio-Composite ' + addSpec.name : mat.name} [${recyclePct}% R1]`,
+        "polymer_type": addSpec.isBio ? 'PLA-Bio-Organic' : matKey.split('-')[0],
+        "density_g_cm3": addSpec.isBio ? (mat.density * 0.96).toFixed(2) : mat.density,
+        "flow_ratio": parseFloat(avgFlow),
+        "min_nozzle_diameter_mm": addSpec.isBio ? 0.5 : 0.4,
+        "nozzle_temperature": printTempRec,
+        "nozzle_temperature_first_layer": printTempRec,
+        "bed_temperature": parseInt(mat.bed.split('-')[0]),
+        "bed_temperature_first_layer": parseInt(mat.bed.split('-')[0]),
+        "diameter_nominal_mm": 1.75,
+        "tolerance_estimate_m1": `±${tolerance.toFixed(2)}mm`,
+        "organic_notice": addSpec.isBio ? (
+          currentLang === 'en' ? "Scented bio-fiber filament. Do not pause with a heated nozzle to avoid thermal degradation." :
+          (currentLang === 'fr' ? "Filament avec fibres bio aromatiques. Ne pas laisser la buse chaude en pause prolongée." :
+          (currentLang === 'de' ? "Aromatisches Bio-Faser-Filament. Düse im Stillstand nicht beheizt lassen." :
+          (currentLang === 'ca' ? "Filament amb biomassa aromàtica. Eviteu deixar el broquet calent en pausa." :
+          "Filamento con biomasa aromática. Evitar dejar la boquilla caliente en pausa.")))
+        ) : "Standard"
+      };
+      document.getElementById('slicerJsonSnippet').innerText = JSON.stringify(slicerJson, null, 2);
+
+      // Producción y Tiempos
+      let throughput = 1000 - (recyclePct <= 50 ? recyclePct * 8 : 400 + (recyclePct - 50) * 2);
+      if (addKey === 'cf' || addKey === 'wood') throughput *= 0.85;
+      document.getElementById('throughputDisp').innerText = `${Math.round(throughput)} g/h`;
+
+      const hoursDuration = totalBatch / throughput;
+      const totalSecs = Math.round(hoursDuration * 3600);
+      const durHours = Math.floor(hoursDuration);
+      const durMins = Math.round((hoursDuration - durHours) * 60);
+      document.getElementById('durationDisp').innerText = `${durHours}h ${durMins}m`;
+
+      const now = new Date();
+      const eta = new Date(now.getTime() + totalSecs * 1000);
+      document.getElementById('etaDisp').innerText = eta.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      if (!timerInterval) {
+        timerTotalSecs = totalSecs;
+        timerRemainingSecs = totalSecs;
+        updateTimerClockDisplay();
+      }
+
+      // Rendimiento Económico
+      const virginPriceKg = parseFloat(document.getElementById('virginPrice').value) || 0;
+      const masterPrice100g = parseFloat(document.getElementById('masterPrice').value) || 0;
+      const marketPrice = parseFloat(document.getElementById('marketPrice').value) || 0;
+
+      const virginCost = (virginWeight / 1000) * virginPriceKg;
+      const pigmentCost = (totalColorG / 100) * masterPrice100g;
+      const additiveCost = (additiveWeight / 1000) * (addKey === 'cf' ? 45 : addKey === 'glow' ? 35 : 10);
+      const energyCost = (hoursDuration * 0.35) * 0.18; // Potencia combinada ~350 W a 0.18 €/kWh
+
+      const spoolCost = virginCost + pigmentCost + additiveCost + energyCost;
+      const savingsNet = marketPrice - spoolCost;
+      const savingsPct = marketPrice > 0 ? (savingsNet / marketPrice) * 100 : 0;
+
+      document.getElementById('totalCostDisp').innerText = `${spoolCost.toFixed(2)} €`;
+      const sEl = document.getElementById('savingsDisp');
+      sEl.innerText = `${savingsNet >= 0 ? '+' : ''}${savingsNet.toFixed(2)} € (${savingsPct.toFixed(1)}%)`;
+      sEl.style.color = savingsNet >= 0 ? 'var(--accent-green)' : 'var(--alert-text)';
+
+      renderSpoolCanvas();
+    }
+
+    function renderSpoolCanvas() {
+      const canvas = document.getElementById('spoolCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const targetHex = document.getElementById('targetPicker').value;
+      const rgb = hexToRgb(targetHex);
+      const addKey = document.getElementById('additiveType').value;
+
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Pestaña Trasera de la Bobina
+      ctx.fillStyle = '#1e212b';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 110, 85, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#383d52';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Núcleo Central de Bobinado
+      ctx.fillStyle = '#0f1117';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 45, 34, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Devanado de Filamento en Espiral
+      const gradient = ctx.createLinearGradient(cx - 95, cy - 65, cx + 95, cy + 65);
+      gradient.addColorStop(0, `rgb(${Math.max(0, rgb.r - 40)}, ${Math.max(0, rgb.g - 40)}, ${Math.max(0, rgb.b - 40)})`);
+      gradient.addColorStop(0.5, `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`);
+      gradient.addColorStop(1, `rgb(${Math.min(255, rgb.r + 40)}, ${Math.min(255, rgb.g + 40)}, ${Math.min(255, rgb.b + 40)})`);
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 95, 72, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Líneas Concéntricas de Capas
+      ctx.lineWidth = 1.6;
+      for (let r = 50; r < 92; r += 7) {
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.28)';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, r, r * 0.76, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Renderizado de Partículas de Aditivos Especiales
+      if (addKey !== 'none') {
+        document.getElementById('legendAdditiveBadge').style.display = 'flex';
+        const addCircle = document.getElementById('legendAddCircle');
+
+        if (addKey === 'coffee') {
+          addCircle.style.background = '#4a2c17';
+          for (let i = 0; i < 95; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 48 + Math.random() * 42;
+            const px = cx + Math.cos(angle) * dist;
+            const py = cy + Math.sin(angle) * (dist * 0.76);
+            ctx.fillStyle = i % 3 === 0 ? '#261408' : '#4a2c17';
+            ctx.beginPath();
+            ctx.arc(px, py, 1.4 + Math.random() * 1.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } else if (addKey === 'flowers') {
+          addCircle.style.background = '#b5179e';
+          const petalColors = ['#7209b7', '#b5179e', '#f72585', '#480ca8', '#f1a7a6'];
+          for (let i = 0; i < 85; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 48 + Math.random() * 42;
+            const px = cx + Math.cos(angle) * dist;
+            const py = cy + Math.sin(angle) * (dist * 0.76);
+            ctx.fillStyle = petalColors[i % petalColors.length];
+            ctx.beginPath();
+            ctx.ellipse(px, py, 1.8, 1.1, Math.random() * Math.PI, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } else if (addKey === 'cf') {
+          addCircle.style.background = '#111';
+          ctx.fillStyle = '#080808';
+          for (let i = 0; i < 90; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 48 + Math.random() * 42;
+            const px = cx + Math.cos(angle) * dist;
+            const py = cy + Math.sin(angle) * (dist * 0.76);
+            ctx.fillRect(px, py, 2.5, 1.2);
+          }
+        } else if (addKey === 'glitter') {
+          addCircle.style.background = '#ffd700';
+          ctx.fillStyle = '#ffffff';
+          for (let i = 0; i < 70; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 48 + Math.random() * 42;
+            const px = cx + Math.cos(angle) * dist;
+            const py = cy + Math.sin(angle) * (dist * 0.76);
+            ctx.fillRect(px, py, 1.8, 1.8);
+          }
+        } else if (addKey === 'wood') {
+          addCircle.style.background = '#8d5b2c';
+          ctx.fillStyle = '#5c3a21';
+          for (let i = 0; i < 80; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 48 + Math.random() * 42;
+            const px = cx + Math.cos(angle) * dist;
+            const py = cy + Math.sin(angle) * (dist * 0.76);
+            ctx.fillRect(px, py, 2, 2);
+          }
+        } else if (addKey === 'glow') {
+          addCircle.style.background = '#b7ff00';
+          ctx.strokeStyle = 'rgba(183, 255, 0, 0.4)';
+          ctx.lineWidth = 6;
+          ctx.beginPath();
+          ctx.ellipse(cx, cy, 92, 70, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      } else {
+        document.getElementById('legendAdditiveBadge').style.display = 'none';
+      }
+
+      // Borde Frontal Translúcido de Bobina
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 108, 83, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      document.getElementById('legendCore').style.background = targetHex;
+    }
+
+    function updateTimerClockDisplay() {
+      const h = Math.floor(timerRemainingSecs / 3600).toString().padStart(2, '0');
+      const m = Math.floor((timerRemainingSecs % 3600) / 60).toString().padStart(2, '0');
+      const s = (timerRemainingSecs % 60).toString().padStart(2, '0');
+      document.getElementById('timerClock').innerText = `${h}:${m}:${s}`;
+    }
+
+    function toggleExtrusionTimer() {
+      const btn = document.getElementById('timerStartBtn');
+      const dict = I18N[currentLang] || I18N['es'];
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        btn.innerText = dict.btnTimerResume;
+        btn.style.background = 'var(--accent-green)';
+      } else {
+        if (timerRemainingSecs <= 0) calcAll();
+        btn.innerText = dict.btnTimerPause;
+        btn.style.background = 'var(--accent-amber)';
+        timerInterval = setInterval(() => {
+          if (timerRemainingSecs > 0) {
+            timerRemainingSecs--;
+            updateTimerClockDisplay();
+          } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            btn.innerText = dict.btnTimerStart;
+            btn.style.background = 'var(--accent-green)';
+            playChime(880, 0.4, 5);
+          }
+        }, 1000);
+      }
+    }
+
+    function resetExtrusionTimer() {
+      const dict = I18N[currentLang] || I18N['es'];
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      document.getElementById('timerStartBtn').innerText = dict.btnTimerStart;
+      document.getElementById('timerStartBtn').style.background = 'var(--accent-green)';
+      calcAll();
+    }
+
+    function copySlicerSnippet() {
+      const text = document.getElementById('slicerJsonSnippet').innerText;
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    /* Generador de Código QR en Canvas (100% Offline) */
+    function drawQrCodeOnCanvas(canvasId, text) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, size, size);
+
+      const modules = 21;
+      const cellSize = size / modules;
+      ctx.fillStyle = "#000000";
+
+      function drawFinderPattern(x, y) {
+        ctx.fillRect(x * cellSize, y * cellSize, 7 * cellSize, 7 * cellSize);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect((x + 1) * cellSize, (y + 1) * cellSize, 5 * cellSize, 5 * cellSize);
+        ctx.fillStyle = "#000000";
+        ctx.fillRect((x + 2) * cellSize, (y + 2) * cellSize, 3 * cellSize, 3 * cellSize);
+      }
+
+      drawFinderPattern(0, 0);
+      drawFinderPattern(modules - 7, 0);
+      drawFinderPattern(0, modules - 7);
+
+      let hash = 0;
+      for (let i = 0; i < text.length; i++) {
+        hash = ((hash << 5) - hash) + text.charCodeAt(i);
+        hash |= 0;
+      }
+
+      for (let r = 0; r < modules; r++) {
+        for (let c = 0; c < modules; c++) {
+          if ((r < 8 && c < 8) || (r < 8 && c >= modules - 8) || (r >= modules - 8 && c < 8)) continue;
+          const bit = (hash ^ (r * 31 + c * 17)) & 1;
+          if (bit) ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    function openLabelModal() {
+      const matKey = document.getElementById('materialSelect').value;
+      const mat = MATERIALS[matKey] || MATERIALS['PLA'];
+      const addKey = document.getElementById('additiveType').value;
+      const addSpec = ADITIVOS[addKey] || ADITIVOS['none'];
+      const weight = document.getElementById('targetWeight').value;
+      const recycle = document.getElementById('recyclePct').value;
+      const flow = document.getElementById('flowRatioDisp').innerText.split(' ')[0] || '0.98';
+      const targetHex = document.getElementById('targetPicker').value;
+      const name = document.getElementById('recipeName').value.trim() || mat.name;
+      const m1ExtrusionTemp = addSpec.isBio ? Math.min(addSpec.maxTempM1, mat.baseM1Temp - 5) : (mat.baseM1Temp - Math.round(recycle * 0.08));
+
+      const nozzleWord = currentLang === 'en' ? 'Nozzle' : (currentLang === 'fr' ? 'Buse' : (currentLang === 'de' ? 'Düse' : (currentLang === 'ca' ? 'Broquet' : 'Boquilla')));
+      const fdmPrintTemp = addSpec.isBio
+        ? `190-195°C / ${mat.bed} (${nozzleWord} ≥0.5mm)`
+        : `${mat.nozzle} / ${mat.bed}`;
+
+      const recycleLabel = currentLang === 'en' 
+        ? `${recycle}% R1 RECYCLED` 
+        : (currentLang === 'fr'
+          ? `${recycle}% RECYCLÉ R1`
+          : (currentLang === 'de'
+            ? `${recycle}% R1 RECYCELT`
+            : (currentLang === 'ca' ? `${recycle}% RECICLAT R1` : `${recycle}% RECICLADO R1`)));
+
+      const bioLabel = currentLang === 'en' 
+        ? `SCENTED (${addSpec.defaultPct}%)` 
+        : (currentLang === 'fr'
+          ? `AROMATIQUE (${addSpec.defaultPct}%)`
+          : (currentLang === 'de'
+            ? `AROMATISCH (${addSpec.defaultPct}%)`
+            : (currentLang === 'ca' ? `AROMÀTIC (${addSpec.defaultPct}%)` : `AROMÁTICO (${addSpec.defaultPct}%)`)));
+
+      const organicBioText = currentLang === 'en' 
+        ? "ORGANIC BIO-COMPOSITE" 
+        : (currentLang === 'fr'
+          ? "BIO-COMPOSITE ORGANIQUE"
+          : (currentLang === 'de'
+            ? "ORGANISCHES BIO-KOMPOSIT"
+            : (currentLang === 'ca' ? "BIO-COMPOST ORGÀNIC" : "BIO-COMPOSITE ORGÁNICO")));
+
+      document.getElementById('lblMaterial').innerText = addSpec.isBio ? organicBioText : mat.name.toUpperCase();
+      document.getElementById('lblRecipeName').innerText = name;
+      document.getElementById('lblRecycleTag').innerText = addSpec.isBio ? bioLabel : recycleLabel;
+      document.getElementById('lblWeight').innerText = `${weight} g`;
+      document.getElementById('lblM1Temp').innerText = `${m1ExtrusionTemp} °C`;
+      document.getElementById('lblFlowRatio').innerText = flow;
+      document.getElementById('lblPrintTemp').innerText = fdmPrintTemp;
+      document.getElementById('lblBatch').innerText = `M1-BIO-${new Date().toISOString().slice(2,10).replace(/-/g,'')}`;
+      document.getElementById('lblColorSample').style.background = targetHex;
+
+      const qrPayload = JSON.stringify({
+        polymer: addSpec.isBio ? 'PLA-Bio' : matKey,
+        additive: addSpec.name,
+        additive_ratio: document.getElementById('additivePct').value + '%',
+        m1_extrusion_temp: `${m1ExtrusionTemp}°C`,
+        min_fdm_nozzle: addSpec.isBio ? '0.5mm' : '0.4mm',
+        flow_ratio: flow,
+        batch: document.getElementById('lblBatch').innerText
+      });
+      drawQrCodeOnCanvas('qrCanvas', qrPayload);
+
+      document.getElementById('labelModal').style.display = 'flex';
+    }
+
+    function closeLabelModal() {
+      document.getElementById('labelModal').style.display = 'none';
+    }
+
+    /* Gestor de Recetas en LocalStorage */
+    function getStoredRecipes() {
+      try {
+        const raw = localStorage.getItem('creality_m1_recipes');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) { return []; }
+    }
+
+    function setStoredRecipes(recipes) {
+      try { localStorage.setItem('creality_m1_recipes', JSON.stringify(recipes)); } catch (e) {}
+    }
+
+    function renderRecipes() {
+      const list = getStoredRecipes();
+      const container = document.getElementById('recipeListContainer');
+      const dict = I18N[currentLang] || I18N['es'];
+      container.innerHTML = '';
+      if (!list.length) {
+        container.innerHTML = `<span style="color:var(--text-muted); font-size:0.8rem; text-align:center; padding:8px;">${dict.noStoredRecipes}</span>`;
+        return;
+      }
+      list.forEach((r, idx) => {
+        const div = document.createElement('div');
+        div.className = 'panel-block';
+        div.style.display = 'flex';
+        div.style.justifyContent = 'space-between';
+        div.style.alignItems = 'center';
+        div.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:24px; height:24px; border-radius:50%; background:${r.targetHex}; border:1px solid #666;"></div>
+            <div>
+              <strong style="font-size:0.85rem;">${r.name}</strong>
+              <div style="font-size:0.72rem; color:var(--text-muted);">${r.material} • ${r.recyclePct}% R1 • ${r.date}</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:5px;">
+            <button type="button" class="btn-icon" onclick="loadRecipe(${idx})" title="Cargar Receta">📥</button>
+            <button type="button" class="btn-icon" onclick="deleteRecipe(${idx})" title="Eliminar Receta">🗑️</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function saveCurrentRecipe() {
+      const name = document.getElementById('recipeName').value.trim() || `Mezcla ${document.getElementById('materialSelect').value}`;
+      const item = {
+        name,
+        date: new Date().toLocaleDateString('es-ES'),
+        material: document.getElementById('materialSelect').value,
+        recyclePct: document.getElementById('recyclePct').value,
+        colorLoad: document.getElementById('colorLoad').value,
+        targetHex: document.getElementById('targetPicker').value,
+        scrapPreset: document.getElementById('scrapPreset').value,
+        scrapHex: document.getElementById('scrapPicker').value,
+        additive: document.getElementById('additiveType').value,
+        additivePct: document.getElementById('additivePct').value
+      };
+      const list = getStoredRecipes();
+      list.unshift(item);
+      setStoredRecipes(list);
+      document.getElementById('recipeName').value = '';
+      renderRecipes();
+    }
+
+    function loadRecipe(idx) {
+      const r = getStoredRecipes()[idx];
+      if (!r) return;
+      document.getElementById('materialSelect').value = r.material;
+      document.getElementById('recyclePct').value = r.recyclePct;
+      document.getElementById('colorLoad').value = r.colorLoad;
+      document.getElementById('targetPicker').value = r.targetHex;
+      document.getElementById('targetPreset').value = 'custom';
+      document.getElementById('scrapPreset').value = r.scrapPreset || 'clear';
+      if (r.scrapHex) document.getElementById('scrapPicker').value = r.scrapHex;
+      document.getElementById('additiveType').value = r.additive || 'none';
+      document.getElementById('additivePct').value = r.additivePct || 0;
+      applyScrapPreset();
+      calcAll();
+      switchTab('tab-blend');
+    }
+
+    function deleteRecipe(idx) {
+      const list = getStoredRecipes();
+      list.splice(idx, 1);
+      setStoredRecipes(list);
+      renderRecipes();
+    }
+
+    function exportRecipesJson() {
+      const list = getStoredRecipes();
+      const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `recetas_creality_m1_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function triggerImportJson() {
+      document.getElementById('jsonFileInput').click();
+    }
+
+    function importRecipesJson(evt) {
+      const file = evt.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (Array.isArray(parsed)) {
+            setStoredRecipes(parsed);
+            renderRecipes();
+          }
+        } catch (err) {}
+      };
+      reader.readAsText(file);
+    }
+
+    /* Soporte de Instalación PWA */
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installPwaBtn').style.display = 'inline-flex';
+    });
+
+    function triggerInstallPwa() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          document.getElementById('installPwaBtn').style.display = 'none';
+        });
+      }
+    }
+
+    /* Inicialización de la Aplicación */
+    window.addEventListener('DOMContentLoaded', () => {
+      let savedTheme = 'dark';
+      try { savedTheme = localStorage.getItem('m1_pro_theme') || 'dark'; } catch(e){}
+
+      let savedLang = 'es';
+      try { savedLang = localStorage.getItem('m1_pro_lang') || 'es'; } catch(e){}
+
+      document.getElementById('additivePct').addEventListener('input', function() {
+        this.dataset.changed = 'true';
+      });
+
+      changeLanguage(savedLang);
+      applyTheme(savedTheme);
+      applyTargetPreset();
+      applyScrapPreset();
+      calcAll();
+      renderRecipes();
+
+      // Permitir desplazamiento horizontal arrastrando o con la rueda del ratón
+      const tabs = document.getElementById('navTabsContainer');
+      if (tabs) {
+        tabs.addEventListener('wheel', (e) => {
+          if (e.deltaY !== 0) {
+            e.preventDefault();
+            tabs.scrollLeft += e.deltaY;
+          }
+        }, { passive: false });
+      }
+    });
+  </script>
+</body>
+</html>
